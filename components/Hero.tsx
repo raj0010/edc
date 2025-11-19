@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CardFan } from './ui/CardFan';
 import { Club } from '../types';
+import { ClubCard } from './ui/ClubCard';
 
 interface HeroProps {
   clubs: Club[];
@@ -10,7 +10,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ clubs, onExplore }) => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-10 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 overflow-hidden">
       {/* Background Gradients */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,_var(--tw-gradient-stops))] from-neutral-800 via-neutral-950 to-black -z-10"></div>
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
@@ -34,19 +34,16 @@ export const Hero: React.FC<HeroProps> = ({ clubs, onExplore }) => {
           </p>
         </motion.div>
 
-        {/* The Fan Visual */}
-        <div className="w-full flex justify-center mb-20">
-          <CardFan clubs={clubs} onClubClick={onExplore} />
-        </div>
-
+        {/* Club Cards Display */}
         <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="w-full flex flex-wrap justify-center gap-6 mb-10"
         >
-          <span className="text-xs text-neutral-500 mb-2">Scroll to explore</span>
-          <div className="w-[1px] h-12 bg-gradient-to-b from-neutral-500 to-transparent"></div>
+          {clubs.map((club) => (
+            <ClubCard key={club.id} club={club} onClick={() => onExplore(club.id)} />
+          ))}
         </motion.div>
       </div>
     </section>
