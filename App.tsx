@@ -5,75 +5,42 @@ import { MarketingPage } from './components/pages/MarketingPage';
 import { StartupPage } from './components/pages/StartupPage';
 import { ConsultingPage } from './components/pages/ConsultingPage';
 import { FinancePage } from './components/pages/FinancePage';
-import { Megaphone, Rocket, Briefcase, TrendingUp } from 'lucide-react';
-import { Club } from './types';
-
-const clubs: Club[] = [
-  {
-    id: 'marketing',
-    name: 'Marketing Club',
-    tagline: 'Master the Art of Outreach',
-    description: 'We decode consumer behavior and craft compelling narratives that sell.',
-    icon: Megaphone,
-    color: 'from-pink-500 to-rose-500',
-    features: ['Brand Strategy Workshops', 'Digital Marketing Bootcamps', 'Live Case Studies']
-  },
-  {
-    id: 'startup',
-    name: 'Startup Club',
-    tagline: 'From Idea to Unicorn',
-    description: 'The incubation hub where raw ideas are refined into scalable business models.',
-    icon: Rocket,
-    color: 'from-violet-500 to-purple-500',
-    features: ['Incubation Support', 'Pitch Deck Reviews', 'Founder Matchmaking']
-  },
-  {
-    id: 'consulting',
-    name: 'Consulting Club',
-    tagline: 'Solving Real World Problems',
-    description: 'Bridging the gap between theory and practice through industry consulting projects.',
-    icon: Briefcase,
-    color: 'from-blue-500 to-cyan-500',
-    features: ['Case Interview Prep', 'Client Projects', 'Strategy Simulations']
-  },
-  {
-    id: 'finance',
-    name: 'Finance Club',
-    tagline: 'Wealth & Wisdom',
-    description: 'Understanding markets, investment strategies, and financial modeling.',
-    icon: TrendingUp,
-    color: 'from-emerald-500 to-green-500',
-    features: ['Portfolio Management', 'Trading Simulations', 'Financial Literacy']
-  }
-];
+import { JoinModal } from './components/ui/JoinModal';
+import { AnimatePresence, motion } from 'framer-motion';
+import { clubs } from './data/clubs';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   // Scroll to top on page change
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
+  const openJoinModal = () => setIsJoinModalOpen(true);
+
   const renderPage = () => {
+    const clubData = (id: string) => clubs.find(c => c.id === id)!;
+    
     switch (currentPage) {
       case 'marketing':
-        return <MarketingPage onBack={() => setCurrentPage('home')} />;
+        return <MarketingPage club={clubData('marketing')} onBack={() => setCurrentPage('home')} onJoin={openJoinModal} />;
       case 'startup':
-        return <StartupPage onBack={() => setCurrentPage('home')} />;
+        return <StartupPage club={clubData('startup')} onBack={() => setCurrentPage('home')} onJoin={openJoinModal} />;
       case 'consulting':
-        return <ConsultingPage onBack={() => setCurrentPage('home')} />;
+        return <ConsultingPage club={clubData('consulting')} onBack={() => setCurrentPage('home')} onJoin={openJoinModal} />;
       case 'finance':
-        return <FinancePage onBack={() => setCurrentPage('home')} />;
+        return <FinancePage club={clubData('finance')} onBack={() => setCurrentPage('home')} onJoin={openJoinModal} />;
       default:
         return <Home clubs={clubs} onNavigate={setCurrentPage} />;
     }
   };
 
   return (
-    <div className="bg-black min-h-screen text-white selection:bg-neutral-700 selection:text-white">
+    <div className="bg-black min-h-screen text-white selection:bg-neutral-700 selection:text-white relative">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-lg border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-40 bg-black/50 backdrop-blur-lg border-b border-white/5">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div 
             className="font-bold text-xl tracking-tighter font-display cursor-pointer" 
@@ -92,17 +59,33 @@ function App() {
               </button>
             ))}
           </div>
-          <button className="px-4 py-2 bg-white text-black text-sm font-bold rounded-full hover:bg-neutral-200 transition-colors">
+          <button 
+            onClick={openJoinModal}
+            className="px-4 py-2 bg-white text-black text-sm font-bold rounded-full hover:bg-neutral-200 transition-colors"
+          >
             Join Us
           </button>
         </div>
       </nav>
 
       <main>
-        {renderPage()}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPage}
+            initial={{ opacity: 0, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, filter: 'blur(10px)' }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="w-full"
+          >
+            {renderPage()}
+          </motion.div>
+        </AnimatePresence>
       </main>
       
       <Footer />
+
+      <JoinModal isOpen={isJoinModalOpen} onClose={() => setIsJoinModalOpen(false)} />
     </div>
   );
 }

@@ -1,12 +1,16 @@
 import React from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { Club } from '../../types';
 import { ArrowRight } from 'lucide-react';
-
-// Inline utility for class merging
-function cn(...classes: (string | undefined | null | false)[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import { Club } from '../../types';
+import { cn } from '../../lib/utils';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './card';
 
 interface ClubCardProps {
   club: Club;
@@ -14,93 +18,119 @@ interface ClubCardProps {
 }
 
 export const ClubCard = ({ club, onClick }: ClubCardProps) => {
-  const { icon: Icon, name: title, description, color } = club;
+  const { icon: Icon, name, description, color, tagline } = club;
   
-  // Heuristic: show tooltip if description is likely to be clamped or is long enough to warrant one.
-  // 120 characters is approximately 2-3 lines.
-  const showTooltip = description.length > 120;
-
-  // Mouse position state for parallax
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  // --- 3D Tilt Logic ---
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(x, [-0.5, 0.5], [-10, 10]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - left) / width - 0.5;
-    const y = (e.clientY - top) / height - 0.5;
-    
-    mouseX.set(x);
-    mouseY.set(y);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
   };
 
   const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
+    x.set(0);
+    y.set(0);
   };
-
-  // Parallax transforms
-  // Background moves opposite to mouse for depth effect (or with mouse for spotlight effect)
-  const bgX = useTransform(mouseX, [-0.5, 0.5], ["15%", "-15%"]);
-  const bgY = useTransform(mouseY, [-0.5, 0.5], ["15%", "-15%"]);
 
   return (
     <motion.div
-      transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-      whileHover={{ y: -5 }}
-      className="group block w-72 h-96 relative cursor-pointer flex-shrink-0 perspective-1000"
-      onClick={onClick}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ scale: 1.02 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
+      className="w-[300px] h-[420px] perspective-1000 group cursor-pointer focus:outline-none"
       role="button"
-      aria-label={`Explore ${title}`}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onClick?.();
+      }}
     >
-      <div 
-        className={cn(
-          'w-full h-full bg-[#161616] border border-gray-800 flex flex-col relative shadow-2xl rounded-xl backface-hidden transition-colors duration-500 group-hover:border-gray-600'
-        )}
-      >
-        {/* Visual background gradient container - Clipped to maintain rounded corners for background */}
-        <div className="absolute inset-0 rounded-xl overflow-hidden pointer-events-none">
-            <motion.div
-              style={{ x: bgX, y: bgY, scale: 1.5 }}
-              className={`absolute inset-0 w-full h-full bg-gradient-to-t ${color} opacity-20 group-hover:opacity-40 transition-opacity duration-500 blur-xl`}
-            ></motion.div>
-            
-            {/* Grain overlay for texture */}
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
+      <Card className={cn(
+        "relative w-full h-full overflow-hidden border-0 rounded-[2rem] transition-all duration-500 shadow-2xl",
+        "bg-gradient-to-br",
+        color
+      )}>
+        
+        {/* --- Background Layers --- */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+           {/* 1. Repeated Typography Texture */}
+           <div className="absolute -inset-10 opacity-10 -rotate-12 scale-150 select-none flex flex-col gap-4 justify-center items-center">
+             {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="text-6xl font-black uppercase text-black whitespace-nowrap leading-none tracking-tighter">
+                  {name.replace(' Club', '')}
+                </div>
+             ))}
+           </div>
+           
+           {/* 2. Noise Grain Overlay for Texture */}
+           <div className="absolute inset-0 opacity-25 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+           
+           {/* 3. Vignette for Depth */}
+           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
         </div>
 
-        {/* Content Layer - Z-indexed above background */}
-        <div className="relative flex flex-col h-full justify-between z-10 p-6">
-          <div className="flex flex-col items-start">
-            <div className="p-4 rounded-2xl bg-gray-900/80 w-fit border border-gray-700/50 mb-6 backdrop-blur-md shadow-inner group-hover:bg-gray-800/80 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-white/5">
-              <Icon className="w-10 h-10 text-white" />
-            </div>
-            <h3 className="text-white text-2xl font-bold font-display tracking-tight mb-3">{title}</h3>
-            
-            {/* Description with hover tooltip */}
-            <div className="relative group/desc">
-              <p className="text-neutral-400 text-sm leading-relaxed line-clamp-4 group-hover:text-neutral-300 transition-colors duration-300">
-                {description}
-              </p>
-              
-              {/* Cinematic Tooltip for long descriptions */}
-              {showTooltip && (
-                <div className="absolute left-0 top-full mt-4 w-64 p-4 bg-neutral-950/95 border border-neutral-800 rounded-xl shadow-2xl opacity-0 invisible group-hover/desc:opacity-100 group-hover/desc:visible transition-all duration-300 z-50 pointer-events-none translate-y-2 group-hover/desc:translate-y-0 backdrop-blur-md">
-                  <div className="absolute -top-2 left-6 w-4 h-4 bg-neutral-950 border-t border-l border-neutral-800 transform rotate-45"></div>
-                  <p className="text-xs text-neutral-300 leading-relaxed font-medium">
-                    {description}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
+        {/* --- Content Container --- */}
+        <div className="relative z-10 flex flex-col h-full justify-between p-2">
           
-          <div className="flex items-center text-sm font-medium text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-            Explore Club <ArrowRight className="w-4 h-4 ml-2" />
-          </div>
+          <CardHeader className="space-y-3">
+            {/* Floating Icon Badge */}
+            <div className="w-12 h-12 bg-black/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-black/5 shadow-sm group-hover:scale-110 transition-transform duration-300 group-hover:rotate-3">
+              <Icon className="w-6 h-6 text-neutral-900" strokeWidth={2} />
+            </div>
+            
+            <div className="space-y-1">
+              <CardTitle className="text-4xl font-black text-neutral-900 uppercase font-display tracking-tighter leading-[0.85] drop-shadow-sm">
+                {name.replace(' Club', '')}
+              </CardTitle>
+              <p className="text-xs font-bold text-neutral-900/70 tracking-widest uppercase font-sans pl-1">
+                {tagline}
+              </p>
+            </div>
+          </CardHeader>
+
+          <CardContent className="pb-0">
+             <CardDescription className="text-neutral-900/90 font-medium text-base leading-relaxed line-clamp-4 mix-blend-multiply border-l-2 border-neutral-900/20 pl-4">
+                {description}
+             </CardDescription>
+          </CardContent>
+
+          <CardFooter className="pb-6 pt-4">
+            <div className="flex items-center gap-4 group/btn w-full">
+               {/* Expanding Button */}
+               <span className="h-10 rounded-full bg-neutral-900 text-white flex items-center justify-between px-1 w-10 group-hover/btn:w-full transition-all duration-300 overflow-hidden shadow-xl hover:bg-black">
+                  <span className="absolute opacity-0 group-hover/btn:opacity-100 whitespace-nowrap text-xs font-bold pl-3 transition-opacity duration-300 delay-75">
+                    JOIN THE CLUB
+                  </span>
+                  <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center ml-auto">
+                    <ArrowRight className="w-4 h-4 text-white" />
+                  </span>
+               </span>
+            </div>
+          </CardFooter>
         </div>
-      </div>
+        
+        {/* Shine Effect on Hover */}
+        <div className="absolute inset-0 z-20 bg-gradient-to-tr from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none mix-blend-overlay"></div>
+
+      </Card>
     </motion.div>
   );
 };
