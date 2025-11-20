@@ -12,10 +12,10 @@ export const clubs: Club[] = [
     accentColor: 'text-pink-500',
     features: ['Brand Strategy Workshops', 'Digital Marketing Bootcamps', 'Live Case Studies'],
     leads: [
-      { name: 'Sarah Jenkins', role: 'President' },
-      { name: 'Mike Chen', role: 'Creative Dir' },
-      { name: 'Jessica Alva', role: 'Social Lead' },
-      { name: 'Tom Ford', role: 'Events Head' }
+      { name: 'Sarah Jenkins', role: 'President', email: 'sarah.j@edc-nexus.edu', socialUrl: 'https://linkedin.com' },
+      { name: 'Mike Chen', role: 'Creative Dir', email: 'mike.chen@edc-nexus.edu' },
+      { name: 'Jessica Alva', role: 'Social Lead', email: 'jess.a@edc-nexus.edu' },
+      { name: 'Tom Ford', role: 'Events Head', email: 'tom.ford@edc-nexus.edu' }
     ],
     nextEvent: {
       title: 'Viral Marketing 101',
@@ -38,10 +38,10 @@ export const clubs: Club[] = [
     accentColor: 'text-violet-500',
     features: ['Incubation Support', 'Pitch Deck Reviews', 'Founder Matchmaking'],
     leads: [
-      { name: 'Alex Rivero', role: 'Founder' },
-      { name: 'Sam K.', role: 'Tech Lead' },
-      { name: 'Priya P.', role: 'Operations' },
-      { name: 'David L.', role: 'Relations' }
+      { name: 'Alex Rivero', role: 'Founder', email: 'alex.r@edc-nexus.edu', socialUrl: 'https://twitter.com' },
+      { name: 'Sam K.', role: 'Tech Lead', email: 'sam.k@edc-nexus.edu' },
+      { name: 'Priya P.', role: 'Operations', email: 'priya.p@edc-nexus.edu' },
+      { name: 'David L.', role: 'Relations', email: 'david.l@edc-nexus.edu' }
     ],
     nextEvent: {
       title: 'Pitch Perfect Night',
@@ -64,10 +64,10 @@ export const clubs: Club[] = [
     accentColor: 'text-blue-500',
     features: ['Case Interview Prep', 'Client Projects', 'Strategy Simulations'],
     leads: [
-      { name: 'Marcus T.', role: 'President' },
-      { name: 'Elena R.', role: 'Strategy Head' },
-      { name: 'John D.', role: 'Case Lead' },
-      { name: 'Sophie M.', role: 'Corporate' }
+      { name: 'Marcus T.', role: 'President', email: 'marcus.t@edc-nexus.edu', socialUrl: 'https://linkedin.com' },
+      { name: 'Elena R.', role: 'Strategy Head', email: 'elena.r@edc-nexus.edu' },
+      { name: 'John D.', role: 'Case Lead', email: 'john.d@edc-nexus.edu' },
+      { name: 'Sophie M.', role: 'Corporate', email: 'sophie.m@edc-nexus.edu' }
     ],
     nextEvent: {
       title: 'McKinsey Case Crack',
@@ -90,10 +90,10 @@ export const clubs: Club[] = [
     accentColor: 'text-emerald-500',
     features: ['Portfolio Management', 'Trading Simulations', 'Financial Literacy'],
     leads: [
-      { name: 'Ryan Gosling', role: 'Portfolio Mgr' },
-      { name: 'Emma Stone', role: 'Analyst' },
-      { name: 'Christian B.', role: 'Quant' },
-      { name: 'Margot R.', role: 'Trader' }
+      { name: 'Ryan Gosling', role: 'Portfolio Mgr', email: 'ryan.g@edc-nexus.edu' },
+      { name: 'Emma Stone', role: 'Analyst', email: 'emma.s@edc-nexus.edu', socialUrl: 'https://linkedin.com' },
+      { name: 'Christian B.', role: 'Quant', email: 'christian.b@edc-nexus.edu' },
+      { name: 'Margot R.', role: 'Trader', email: 'margot.r@edc-nexus.edu' }
     ],
     nextEvent: {
       title: 'Market Makers Summit',

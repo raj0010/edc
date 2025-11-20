@@ -4,6 +4,8 @@ export interface ClubMember {
   name: string;
   role: string;
   imageUrl?: string;
+  email?: string;
+  socialUrl?: string;
 }
 
 export interface ClubEvent {

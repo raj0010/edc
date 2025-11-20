@@ -1,231 +1,132 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, Variants } from 'framer-motion';
-import { Club } from '../types';
-import { ClubCard } from './ui/ClubCard';
-import { Sparkles, Hammer, Rocket, ChevronDown } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import { TypewriterEffect } from './ui/TypewriterEffect';
 
-interface HeroProps {
-  clubs: Club[];
-  onExplore: (id: string) => void;
-}
-
-export const Hero: React.FC<HeroProps> = ({ clubs, onExplore }) => {
+export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
   });
 
-  const textY = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  const letterVariants: Variants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: [0.2, 0.65, 0.3, 0.9],
-      },
-    },
-  };
-
-  const SplitText = ({ text, className, delay = 0 }: { text: string, className?: string, delay?: number }) => {
-    return (
-      <motion.span
-        className={className}
-        variants={{
-          hidden: { opacity: 1 },
-          visible: {
-            opacity: 1,
-            transition: {
-              delayChildren: delay,
-              staggerChildren: 0.05,
-            }
-          }
-        }}
-        initial="hidden"
-        animate="visible"
-      >
-        {text.split("").map((char, index) => (
-          <motion.span 
-            key={index} 
-            variants={letterVariants} 
-            className="inline-block"
-          >
-            {char === " " ? "\u00A0" : char}
-          </motion.span>
-        ))}
-      </motion.span>
-    );
+  const scrollToClubs = () => {
+    const element = document.getElementById('club-showcase');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col items-center justify-start pt-24 md:pt-32 pb-0 overflow-hidden bg-black selection:bg-neutral-800 selection:text-white">
-      
-      {/* --- Background Atmosphere --- */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_#1a1a1a_0%,_#000000_100%)] -z-10"></div>
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] -z-10"></div>
-
-      <div className="container mx-auto px-4 z-10 flex flex-col items-center">
+    <section 
+      ref={containerRef} 
+      className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-white dark:bg-black transition-colors duration-500"
+    >
+      {/* --- Dynamic Background --- */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
         
-        {/* --- Text Content --- */}
+        {/* Spotlight / Aurora Effect */}
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-indigo-500/20 dark:bg-indigo-500/10 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen animate-pulse"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-purple-500/20 dark:bg-purple-500/10 blur-[100px] rounded-full mix-blend-multiply dark:mix-blend-screen"></div>
+      </div>
+
+      {/* --- Content --- */}
+      <motion.div 
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative z-10 container mx-auto px-4 flex flex-col items-center text-center"
+      >
+        {/* Badge */}
         <motion.div
-          style={{ y: textY, opacity: textOpacity }}
-          className="text-center mb-8 md:mb-16 max-w-5xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-sm font-medium text-neutral-600 dark:text-neutral-300 backdrop-blur-sm"
         >
-          {/* Badge */}
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center px-4 py-1.5 mb-8 text-xs font-bold tracking-widest text-white uppercase bg-neutral-900/80 rounded-full border border-neutral-800 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-            Welcome to EDC
-          </motion.span>
-          
-          {/* H1 Headline with Typewriter Animation */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tighter mb-8 font-display leading-[0.95]">
-            <div className="block">
-               <SplitText delay={0.2} text="Where Ideas Rise." />
-            </div>
-            <div className="block">
-               <SplitText className="text-neutral-500" delay={1.2} text="Leaders Emerge." />
-            </div>
-            <div className="block">
-               <SplitText className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-neutral-400" delay={2.2} text="Startups Begin." />
-            </div>
-          </h1>
-          
-          {/* Description */}
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 3.2, duration: 0.8 }}
-            className="text-lg md:text-xl text-neutral-400 max-w-3xl mx-auto leading-relaxed font-light"
-          >
-            At the <strong className="text-white font-medium">Entrepreneur Development Cell</strong>, we believe that every student carries a spark. 
-            We are the campus hub for innovation, empowering thinkers, dreamers, and future founders to build the extraordinary.
-          </motion.p>
+          <Sparkles className="w-4 h-4 text-amber-500" />
+          <span className="uppercase tracking-wider text-xs font-bold">Applications Open Fall 2024</span>
         </motion.div>
 
-        {/* --- Card Fan Visual (The Launchpad) --- */}
-        <div className="hidden md:flex relative w-full max-w-5xl mx-auto h-[420px] justify-center items-center mt-4 perspective-[2000px]">
-          {clubs.map((club, index) => {
-            const total = clubs.length;
-            const midpoint = (total - 1) / 2;
-            const spread = index - midpoint;
-            const rotate = spread * 5; 
-            const x = spread * 115; 
-            const y = Math.abs(spread) * 20; 
-
-            return (
-              <motion.div
-                key={club.id}
-                initial={{ opacity: 0, y: 200, rotate: 0, scale: 0.8 }}
-                animate={{ 
-                  opacity: 1, 
-                  rotate: rotate, 
-                  x: x, 
-                  scale: 1,
-                  y: [y, y - 15, y] // Floating animation
-                }}
-                transition={{ 
-                  opacity: { duration: 0.8, delay: 0.4 + (index * 0.1) },
-                  y: { 
-                    duration: 4 + index, // Varied duration for organic feel
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    ease: "easeInOut",
-                    delay: index * 0.2
-                  },
-                  default: { type: "spring", stiffness: 80, damping: 20 }
-                }}
-                style={{ 
-                  zIndex: index,
-                  transformOrigin: "bottom center"
-                }}
-                whileHover={{ 
-                  zIndex: 50, 
-                  scale: 1.15, 
-                  rotate: 0, 
-                  y: -50,
-                  transition: { type: "spring", stiffness: 200, damping: 20 }
-                }}
-                className="absolute cursor-pointer"
-              >
-                <ClubCard club={club} onClick={() => onExplore(club.id)} />
-              </motion.div>
-            );
-          })}
+        {/* Main Heading */}
+        <div className="relative mb-8 flex flex-col items-center leading-[0.9]">
+           <div className="text-6xl md:text-9xl font-black tracking-tighter text-neutral-900 dark:text-white font-display">
+             <TypewriterEffect 
+                words={[
+                  { text: "FORGE" },
+                  { text: "THE" }
+                ]}
+                className="inline-block"
+                cursorClassName="hidden" // Hide cursor for first line
+                delay={0.5}
+                showCursor={false}
+             />
+           </div>
+           
+           <div className="text-6xl md:text-9xl font-black tracking-tighter font-display -mt-2 md:-mt-4">
+              <TypewriterEffect 
+                  words={[
+                    { 
+                      text: "FUTURE.", 
+                      className: "text-transparent bg-clip-text bg-gradient-to-b from-neutral-900 to-neutral-500 dark:from-white dark:to-neutral-500 pb-4" 
+                    }
+                  ]}
+                  className="inline-block"
+                  cursorClassName="bg-neutral-900 dark:bg-white h-12 md:h-24 lg:h-32"
+                  delay={1.5} // Starts after "FORGE THE" (approx 9 chars * 0.1s + base delay)
+                  showCursor={true}
+               />
+           </div>
+           
+           {/* Decorative Elements near text */}
+           <motion.div 
+             initial={{ scale: 0 }}
+             animate={{ scale: 1 }}
+             transition={{ delay: 2.5, type: "spring" }}
+             className="absolute -top-8 -right-8 md:right-0 w-16 h-16 hidden md:flex items-center justify-center"
+           >
+              <div className="w-full h-full border border-dashed border-neutral-300 dark:border-neutral-700 rounded-full animate-spin-slow"></div>
+           </motion.div>
         </div>
 
-        {/* Mobile Stack Layout */}
-        <div className="md:hidden w-full flex flex-col items-center gap-6 pb-12">
-           {clubs.map((club, index) => (
-             <motion.div
-                key={club.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + (index * 0.1) }}
-             >
-               <ClubCard club={club} onClick={() => onExplore(club.id)} />
-             </motion.div>
-           ))}
-        </div>
+        {/* Subtitle */}
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 2.8 }}
+          className="max-w-2xl text-lg md:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed mb-10 font-light"
+        >
+          EDC Nexus is the premier incubation ecosystem where students transform audacious ideas into scalable ventures. 
+          <span className="hidden md:inline"> Join a community of disruptors, creators, and leaders.</span>
+        </motion.p>
 
-        {/* --- The 3 Pillars (Inspire, Build, Launch) --- */}
-        <div className="w-full max-w-6xl mt-20 md:mt-32 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-neutral-900 pt-16 bg-black z-10 relative">
-            {[
-              {
-                icon: Sparkles,
-                title: "Inspire",
-                desc: "Through speaker sessions, workshops, and startup stories, we inspire students to think beyond boundaries and dare to build something new.",
-                color: "text-yellow-400"
-              },
-              {
-                icon: Hammer,
-                title: "Build",
-                desc: "EDC provides hands-on learning, mentorship, and resources that help students transform ideas into scalable, impactful ventures.",
-                color: "text-blue-400"
-              },
-              {
-                icon: Rocket,
-                title: "Launch",
-                desc: "From idea validation to pitching and incubation, we offer the right ecosystem to take your startup dreams from concept to reality.",
-                color: "text-red-400"
-              }
-            ].map((item, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 + (i * 0.2) }}
-                className="flex flex-col items-start p-6 rounded-2xl hover:bg-neutral-900/50 transition-colors duration-300 border border-transparent hover:border-neutral-800"
-              >
-                <div className={`p-3 rounded-xl bg-neutral-900 mb-6 ${item.color} border border-neutral-800`}>
-                  <item.icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4 font-display uppercase tracking-wide">{item.title}</h3>
-                <p className="text-neutral-400 leading-relaxed text-sm">{item.desc}</p>
-              </motion.div>
-            ))}
-        </div>
-      </div>
-      
+        {/* Buttons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 3.0 }}
+          className="flex flex-col sm:flex-row items-center gap-4"
+        >
+          <button 
+            onClick={scrollToClubs}
+            className="px-8 py-4 bg-neutral-900 dark:bg-white text-white dark:text-black rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-neutral-500/20"
+          >
+            Explore Ecosystem <ArrowRight className="w-4 h-4" />
+          </button>
+        </motion.div>
+      </motion.div>
+
       {/* Scroll Indicator */}
       <motion.div 
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 10, 0] }}
-        transition={{ delay: 2, duration: 2, repeat: Infinity }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-neutral-500 hidden md:block"
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3.5, duration: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-neutral-400 dark:text-neutral-600"
       >
-        <ChevronDown className="w-6 h-6" />
+        <div className="w-px h-12 bg-gradient-to-b from-transparent via-neutral-400 dark:via-neutral-600 to-transparent"></div>
       </motion.div>
     </section>
   );

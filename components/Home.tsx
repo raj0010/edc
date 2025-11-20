@@ -1,5 +1,7 @@
 import React from 'react';
 import { Hero } from './Hero';
+import { ClubShowcase } from './ClubShowcase';
+import { Features } from './Features';
 import { Club } from '../types';
 import { VelocityScroll } from './ui/VelocityScroll';
 import { motion } from 'framer-motion';
@@ -13,7 +15,11 @@ interface HomeProps {
 export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
   return (
     <div className="min-h-screen bg-black overflow-x-hidden">
-      <Hero clubs={clubs} onExplore={onNavigate} />
+      <Hero />
+      
+      <ClubShowcase clubs={clubs} onExplore={onNavigate} />
+
+      <Features />
       
       <div className="relative z-10 bg-black">
         <VelocityScroll 
