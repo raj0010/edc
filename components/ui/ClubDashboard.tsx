@@ -31,6 +31,14 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
     visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } }
   };
 
+  // Helper for toggle keyboard interaction
+  const handleToggleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setNotificationsEnabled(!notificationsEnabled);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white px-4 md:px-8 pt-32 md:pt-40 pb-20 font-sans selection:bg-neutral-800">
         <motion.div 
@@ -53,19 +61,25 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10 mb-8">
                     <button 
                         onClick={onBack}
-                        className="flex items-center text-neutral-400 hover:text-white transition-colors group/back bg-black/40 hover:bg-black/60 px-5 py-2.5 rounded-full backdrop-blur-md border border-white/5 hover:border-white/20"
+                        aria-label="Go back to hub"
+                        className="flex items-center text-neutral-400 hover:text-white transition-colors group/back bg-black/40 hover:bg-black/60 px-5 py-2.5 rounded-full backdrop-blur-md border border-white/5 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-white/20"
                     >
-                        <ArrowLeft className="w-4 h-4 mr-2 group-hover/back:-translate-x-1 transition-transform" />
+                        <ArrowLeft className="w-4 h-4 mr-2 group-hover/back:-translate-x-1 transition-transform" aria-hidden="true" />
                         <span className="text-sm font-medium">Back to Hub</span>
                     </button>
 
-                    {/* Navigation Pills */}
-                    <div className="flex flex-wrap gap-2 md:gap-0 p-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/5">
+                    {/* Navigation Pills (Tab List) */}
+                    <div className="flex flex-wrap gap-2 md:gap-0 p-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/5" role="tablist" aria-label="Dashboard sections">
                         {['About', 'Events', 'Resources'].map((item) => (
                            <button 
                              key={item} 
+                             role="tab"
+                             aria-selected={activeTab === item}
+                             aria-controls={`panel-${item}`}
+                             id={`tab-${item}`}
+                             tabIndex={activeTab === item ? 0 : -1}
                              onClick={() => setActiveTab(item)}
-                             className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                             className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/20 ${
                                activeTab === item 
                                  ? 'bg-neutral-800 text-white shadow-lg' 
                                  : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
@@ -76,19 +90,23 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                         ))}
                         <button 
                             onClick={onJoin}
-                            className={`ml-2 px-6 py-2 rounded-full bg-gradient-to-r ${club.color} text-white text-sm font-bold shadow-lg hover:shadow-${club.accentColor}/50 hover:scale-105 transition-all duration-300`}
+                            aria-label={`Join ${club.name}`}
+                            className={`ml-2 px-6 py-2 rounded-full bg-gradient-to-r ${club.color} text-white text-sm font-bold shadow-lg hover:shadow-${club.accentColor}/50 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/20`}
                         >
                             Join Club
                         </button>
                     </div>
                 </div>
 
-                {/* Main Content - Dynamic based on Tab */}
+                {/* Main Content - Dynamic based on Tab (Tab Panels) */}
                 <div className="relative z-10 mt-4 flex-1 flex flex-col justify-end">
                   <AnimatePresence mode="wait">
                     {activeTab === 'About' && (
                       <motion.div
                         key="about"
+                        role="tabpanel"
+                        id="panel-About"
+                        aria-labelledby="tab-About"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
@@ -96,7 +114,7 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                         className="flex flex-col md:flex-row md:items-end justify-between gap-8"
                       >
                         <div className="max-w-2xl">
-                            <div className="w-20 h-20 rounded-3xl bg-neutral-900/50 border border-neutral-700/50 backdrop-blur-md flex items-center justify-center mb-8 shadow-xl group-hover:scale-110 transition-transform duration-500">
+                            <div className="w-20 h-20 rounded-3xl bg-neutral-900/50 border border-neutral-700/50 backdrop-blur-md flex items-center justify-center mb-8 shadow-xl group-hover:scale-110 transition-transform duration-500" aria-hidden="true">
                                 <Icon className={`w-10 h-10 ${club.accentColor}`} />
                             </div>
                             <h1 className="text-5xl md:text-7xl font-bold font-display tracking-tight mb-6 leading-[0.9] text-white">
@@ -114,12 +132,12 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                                <div className="h-1 w-1 bg-neutral-700 rounded-full"></div>
                                <div className="text-neutral-400 text-sm font-medium">
                                   {club.tagline}
-                               </div>
+                                </div>
                             </div>
                         </div>
 
                         {/* Stats Column */}
-                        <div className="flex flex-row md:flex-col gap-8 md:gap-4">
+                        <div className="flex flex-row md:flex-col gap-8 md:gap-4" aria-label="Club Statistics">
                             {club.stats.map((stat, i) => (
                                 <div key={i} className="bg-black/20 backdrop-blur-sm rounded-2xl p-4 border border-white/5 min-w-[120px]">
                                     <div className={`text-2xl font-bold ${club.accentColor} font-display`}>{stat.value}</div>
@@ -133,6 +151,9 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                     {activeTab === 'Events' && (
                       <motion.div
                         key="events"
+                        role="tabpanel"
+                        id="panel-Events"
+                        aria-labelledby="tab-Events"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
@@ -146,7 +167,7 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
 
                          <div className="grid gap-4">
                             {/* Featured Next Event */}
-                            <div className="p-6 rounded-3xl bg-white/5 border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/10 transition-colors cursor-pointer group/event">
+                            <button className="w-full text-left p-6 rounded-3xl bg-white/5 border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/10 transition-colors cursor-pointer group/event focus:outline-none focus:ring-2 focus:ring-white/20">
                                 <div className="flex items-center gap-4">
                                     <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${club.color} flex items-center justify-center text-white shadow-lg`}>
                                         <Calendar className="w-6 h-6" />
@@ -160,10 +181,10 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                                     <div className="text-2xl font-bold font-display text-white">{club.nextEvent.date.split('•')[0]}</div>
                                     <div className="text-sm text-neutral-400">{club.nextEvent.date.split('•')[1]}</div>
                                 </div>
-                            </div>
+                            </button>
                             
                             {/* Placeholder for future events */}
-                            <div className="p-6 rounded-3xl bg-white/5 border border-white/5 flex items-center justify-center text-neutral-500 border-dashed">
+                            <div className="p-6 rounded-3xl bg-white/5 border border-white/5 flex items-center justify-center text-neutral-500 border-dashed" role="note">
                                 <span className="text-sm">More events to be announced soon...</span>
                             </div>
                          </div>
@@ -173,6 +194,9 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                     {activeTab === 'Resources' && (
                       <motion.div
                         key="resources"
+                        role="tabpanel"
+                        id="panel-Resources"
+                        aria-labelledby="tab-Resources"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
@@ -186,12 +210,12 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
 
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                              {['Club Handbook 2024', 'Mentorship Portal', 'Project Archive', 'Learning Roadmap'].map((item, i) => (
-                                 <div key={i} className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer group/res flex items-center justify-between">
+                                 <a key={i} href="#" className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer group/res flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-white/20">
                                      <span className="font-medium text-white">{item}</span>
                                      <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover/res:bg-white/20 transition-colors">
                                         <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover/res:text-white" />
                                      </div>
-                                 </div>
+                                 </a>
                              ))}
                          </div>
                       </motion.div>
@@ -209,7 +233,7 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
             >
                 <div className="relative z-10">
                     <div className={`w-12 h-12 rounded-2xl bg-neutral-800 flex items-center justify-center mb-4 ${notificationsEnabled ? 'text-white' : 'text-neutral-500'} transition-colors`}>
-                       <Bell className={`w-6 h-6 ${notificationsEnabled ? 'fill-current' : ''}`} />
+                       <Bell className={`w-6 h-6 ${notificationsEnabled ? 'fill-current' : ''}`} aria-hidden="true" />
                     </div>
                     <h3 className="text-2xl font-bold text-white font-display mb-2">Alerts</h3>
                     <p className="text-sm text-neutral-400 leading-relaxed">
@@ -219,8 +243,13 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                 
                 {/* Interactive Toggle */}
                 <div 
+                    role="switch"
+                    aria-checked={notificationsEnabled}
+                    aria-label="Enable notifications"
+                    tabIndex={0}
                     onClick={() => setNotificationsEnabled(!notificationsEnabled)}
-                    className={`relative z-10 flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all duration-300 ${
+                    onKeyDown={handleToggleKeyDown}
+                    className={`relative z-10 flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/20 ${
                         notificationsEnabled 
                           ? `bg-${club.accentColor.split('-')[1]}-900/20 border-${club.accentColor.split('-')[1]}-500/50` 
                           : 'bg-neutral-800/50 border-neutral-700/50 hover:bg-neutral-800'
@@ -247,29 +276,32 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
             >
                 <div className="flex justify-between items-center mb-4 px-2 relative z-10">
                    <h3 className="text-xl font-bold text-white font-display">Up Next</h3>
-                   <div className="p-2 rounded-full hover:bg-neutral-800 transition-colors cursor-pointer">
+                   <button aria-label="More options" className="p-2 rounded-full hover:bg-neutral-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/20">
                        <MoreHorizontal className="text-neutral-500 w-5 h-5" />
-                   </div>
+                   </button>
                 </div>
                 
-                <div className="flex-1 bg-neutral-800 rounded-[1.5rem] border border-neutral-700/50 overflow-hidden relative cursor-pointer group/card">
+                <button 
+                  className="flex-1 bg-neutral-800 rounded-[1.5rem] border border-neutral-700/50 overflow-hidden relative cursor-pointer group/card w-full text-left focus:outline-none focus:ring-2 focus:ring-white/20"
+                  aria-label={`RSVP for ${club.nextEvent.title}`}
+                >
                     {/* Card Background with Gradient */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${club.color} opacity-0 group-hover/card:opacity-10 transition-opacity duration-500`}></div>
                     
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                       <Calendar className={`w-12 h-12 text-neutral-600 mb-4 group-hover/card:scale-110 group-hover/card:${club.accentColor} transition-all duration-500`} />
+                       <Calendar className={`w-12 h-12 text-neutral-600 mb-4 group-hover/card:scale-110 group-hover/card:${club.accentColor} transition-all duration-500`} aria-hidden="true" />
                        <p className="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">{club.nextEvent.type}</p>
                        <h4 className="text-lg font-bold text-white leading-tight mb-1">{club.nextEvent.title}</h4>
                        <p className={`text-sm font-medium ${club.accentColor}`}>{club.nextEvent.date}</p>
                     </div>
 
                     {/* Hover Action */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover/card:translate-y-0 transition-transform duration-300">
-                        <button className="w-full py-3 bg-white text-black font-bold text-xs rounded-xl uppercase tracking-wide hover:bg-neutral-200">
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover/card:translate-y-0 transition-transform duration-300" aria-hidden="true">
+                        <div className="w-full py-3 bg-white text-black font-bold text-xs rounded-xl uppercase tracking-wide hover:bg-neutral-200 text-center">
                             RSVP Now
-                        </button>
+                        </div>
                     </div>
-                </div>
+                </button>
             </motion.div>
 
             {/* Widget 3: Team Grid (Bottom Right) */}
@@ -284,18 +316,23 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                     </div>
                     
                     {/* 2x2 Avatar Grid */}
-                    <div className="grid grid-cols-2 gap-3 mb-2">
+                    <div className="grid grid-cols-2 gap-3 mb-2" role="list" aria-label="Team members">
                         {club.leads.slice(0, 4).map((lead, i) => (
-                            <div key={i} className="group/member relative">
-                                <div className="aspect-square rounded-2xl bg-neutral-800 border border-neutral-700 flex flex-col items-center justify-center hover:border-neutral-500 transition-colors cursor-pointer relative overflow-hidden">
-                                    <Users className="w-5 h-5 text-neutral-600 group-hover/member:text-white transition-colors mb-1" />
-                                    <div className="text-[10px] text-neutral-500 font-medium uppercase text-center px-1 opacity-0 group-hover/member:opacity-100 transition-opacity absolute bottom-2">
-                                        {lead.role}
-                                    </div>
-                                    <div className={`absolute inset-0 bg-gradient-to-tr ${club.color} opacity-0 group-hover/member:opacity-10 transition-opacity`}></div>
+                            <div 
+                                key={i} 
+                                role="listitem"
+                                tabIndex={0}
+                                className="group/member relative aspect-square rounded-2xl bg-neutral-800 border border-neutral-700 flex flex-col items-center justify-center hover:border-neutral-500 transition-colors cursor-pointer overflow-hidden focus:outline-none focus:border-white"
+                                aria-label={`${lead.name}, ${lead.role}`}
+                            >
+                                <Users className="w-5 h-5 text-neutral-600 group-hover/member:text-white transition-colors mb-1" aria-hidden="true" />
+                                <div className="text-[10px] text-neutral-500 font-medium uppercase text-center px-1 opacity-0 group-hover/member:opacity-100 group-focus:opacity-100 transition-opacity absolute bottom-2">
+                                    {lead.role}
                                 </div>
+                                <div className={`absolute inset-0 bg-gradient-to-tr ${club.color} opacity-0 group-hover/member:opacity-10 transition-opacity`}></div>
+                                
                                 {/* Tooltip */}
-                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-white text-black text-[10px] font-bold rounded opacity-0 group-hover/member:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
+                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-white text-black text-[10px] font-bold rounded opacity-0 group-hover/member:opacity-100 group-focus:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
                                     {lead.name}
                                 </div>
                             </div>
@@ -303,9 +340,9 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                     </div>
                 </div>
 
-                <button className="w-full py-3 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2 group/btn">
+                <button className="w-full py-3 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2 group/btn focus:outline-none focus:ring-2 focus:ring-white/20">
                     View All Members
-                    <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                    <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" aria-hidden="true" />
                 </button>
             </motion.div>
 

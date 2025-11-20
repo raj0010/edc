@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, Variants } from 'framer-motion';
 import { Club } from '../types';
 import { ClubCard } from './ui/ClubCard';
 import { Sparkles, Hammer, Rocket, ChevronDown } from 'lucide-react';
@@ -18,6 +18,48 @@ export const Hero: React.FC<HeroProps> = ({ clubs, onExplore }) => {
 
   const textY = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  const letterVariants: Variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.2, 0.65, 0.3, 0.9],
+      },
+    },
+  };
+
+  const SplitText = ({ text, className, delay = 0 }: { text: string, className?: string, delay?: number }) => {
+    return (
+      <motion.span
+        className={className}
+        variants={{
+          hidden: { opacity: 1 },
+          visible: {
+            opacity: 1,
+            transition: {
+              delayChildren: delay,
+              staggerChildren: 0.05,
+            }
+          }
+        }}
+        initial="hidden"
+        animate="visible"
+      >
+        {text.split("").map((char, index) => (
+          <motion.span 
+            key={index} 
+            variants={letterVariants} 
+            className="inline-block"
+          >
+            {char === " " ? "\u00A0" : char}
+          </motion.span>
+        ))}
+      </motion.span>
+    );
+  };
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex flex-col items-center justify-start pt-24 md:pt-32 pb-0 overflow-hidden bg-black selection:bg-neutral-800 selection:text-white">
@@ -46,18 +88,29 @@ export const Hero: React.FC<HeroProps> = ({ clubs, onExplore }) => {
             Welcome to EDC
           </motion.span>
           
-          {/* H1 Headline */}
+          {/* H1 Headline with Typewriter Animation */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tighter mb-8 font-display leading-[0.95]">
-            Where Ideas Rise. <br className="hidden md:block" />
-            <span className="text-neutral-500">Leaders Emerge.</span> <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-neutral-400">Startups Begin.</span>
+            <div className="block">
+               <SplitText delay={0.2} text="Where Ideas Rise." />
+            </div>
+            <div className="block">
+               <SplitText className="text-neutral-500" delay={1.2} text="Leaders Emerge." />
+            </div>
+            <div className="block">
+               <SplitText className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-neutral-400" delay={2.2} text="Startups Begin." />
+            </div>
           </h1>
           
           {/* Description */}
-          <p className="text-lg md:text-xl text-neutral-400 max-w-3xl mx-auto leading-relaxed font-light">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 3.2, duration: 0.8 }}
+            className="text-lg md:text-xl text-neutral-400 max-w-3xl mx-auto leading-relaxed font-light"
+          >
             At the <strong className="text-white font-medium">Entrepreneur Development Cell</strong>, we believe that every student carries a spark. 
             We are the campus hub for innovation, empowering thinkers, dreamers, and future founders to build the extraordinary.
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* --- Card Fan Visual (The Launchpad) --- */}
