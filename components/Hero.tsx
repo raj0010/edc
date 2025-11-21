@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { TypewriterEffect } from './ui/TypewriterEffect';
 
 export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,69 +44,91 @@ export const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-sm font-medium text-neutral-600 dark:text-neutral-300 backdrop-blur-sm"
+          className="mb-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-sm font-medium text-neutral-600 dark:text-neutral-300 backdrop-blur-sm"
         >
           <Sparkles className="w-4 h-4 text-amber-500" />
           <span className="uppercase tracking-wider text-xs font-bold">Applications Open Fall 2024</span>
         </motion.div>
 
         {/* Main Heading */}
-        <div className="relative mb-8 flex flex-col items-center leading-[0.9]">
-           <div className="text-6xl md:text-9xl font-black tracking-tighter text-neutral-900 dark:text-white font-display">
-             <TypewriterEffect 
-                words={[
-                  { text: "FORGE" },
-                  { text: "THE" }
-                ]}
-                className="inline-block"
-                cursorClassName="hidden" // Hide cursor for first line
-                delay={0.5}
-                showCursor={false}
-             />
-           </div>
+        <div className="relative mb-8 flex flex-col items-center">
            
-           <div className="text-6xl md:text-9xl font-black tracking-tighter font-display -mt-2 md:-mt-4">
-              <TypewriterEffect 
-                  words={[
-                    { 
-                      text: "FUTURE.", 
-                      className: "text-transparent bg-clip-text bg-gradient-to-b from-neutral-900 to-neutral-500 dark:from-white dark:to-neutral-500 pb-4" 
-                    }
-                  ]}
-                  className="inline-block"
-                  cursorClassName="bg-neutral-900 dark:bg-white h-12 md:h-24 lg:h-32"
-                  delay={1.5} // Starts after "FORGE THE" (approx 9 chars * 0.1s + base delay)
-                  showCursor={true}
-               />
-           </div>
-           
-           {/* Decorative Elements near text */}
-           <motion.div 
-             initial={{ scale: 0 }}
-             animate={{ scale: 1 }}
-             transition={{ delay: 2.5, type: "spring" }}
-             className="absolute -top-8 -right-8 md:right-0 w-16 h-16 hidden md:flex items-center justify-center"
+           {/* Line 1: Animated Letter Spacing */}
+           <motion.h2 
+             initial={{ opacity: 0, letterSpacing: "0em" }}
+             animate={{ opacity: 1, letterSpacing: "0.3em" }}
+             transition={{ duration: 1.5, ease: "easeOut" }}
+             className="text-xl md:text-2xl font-bold text-neutral-500 dark:text-neutral-400 uppercase mb-4 md:mb-6"
            >
-              <div className="w-full h-full border border-dashed border-neutral-300 dark:border-neutral-700 rounded-full animate-spin-slow"></div>
+             Forge The
+           </motion.h2>
+
+           {/* Line 2: Massive Staggered Reveal */}
+           <h1 className="text-7xl md:text-9xl lg:text-[11rem] font-black tracking-tighter font-display leading-[0.85] overflow-hidden py-4">
+             <div className="flex justify-center overflow-hidden">
+               {"FUTURE.".split("").map((char, i) => (
+                 <motion.span
+                   key={i}
+                   initial={{ y: "150%" }}
+                   animate={{ y: 0 }}
+                   transition={{ 
+                     duration: 1.8, 
+                     delay: 0.2 + i * 0.15, 
+                     ease: [0.19, 1, 0.22, 1] 
+                   }}
+                   className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-neutral-900 via-neutral-700 to-neutral-400 dark:from-white dark:via-neutral-200 dark:to-neutral-600"
+                 >
+                   {char}
+                 </motion.span>
+               ))}
+             </div>
+           </h1>
+           
+           {/* Decorative Loading Circle */}
+           <motion.div 
+             initial={{ scale: 0, opacity: 0 }}
+             animate={{ scale: 1, opacity: 1 }}
+             transition={{ delay: 1.5, type: "spring", stiffness: 200, damping: 15 }}
+             className="absolute -top-10 -right-8 md:right-10 w-24 h-24 hidden lg:flex items-center justify-center opacity-50"
+           >
+              <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
+                <text className="fill-neutral-400 text-[10px] font-bold uppercase tracking-widest">
+                  <textPath href="#circlePath">
+                     • Innovation • Disruption • Scale • Growth
+                  </textPath>
+                </text>
+              </svg>
            </motion.div>
         </div>
+
+        {/* Tagline */}
+        <motion.h3
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
+          className="text-xl md:text-2xl font-medium text-neutral-800 dark:text-neutral-200 mb-6 font-display"
+        >
+          Where Ideas Rise. Leaders Emerge. Startups Begin.
+        </motion.h3>
 
         {/* Subtitle */}
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 2.8 }}
-          className="max-w-2xl text-lg md:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed mb-10 font-light"
+          transition={{ duration: 0.8, delay: 1.3 }}
+          className="max-w-2xl text-base md:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed mb-10 font-light"
         >
-          EDC Nexus is the premier incubation ecosystem where students transform audacious ideas into scalable ventures. 
-          <span className="hidden md:inline"> Join a community of disruptors, creators, and leaders.</span>
+          At the Entrepreneur Development Cell, we believe that every student carries a spark. 
+          We are the hub of innovation, creativity, and entrepreneurial energy on campus, 
+          committed to empowering thinkers, dreamers, and future founders.
         </motion.p>
 
         {/* Buttons */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 3.0 }}
+          transition={{ duration: 0.8, delay: 1.5 }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
           <button 
@@ -123,7 +144,7 @@ export const Hero: React.FC = () => {
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 3.5, duration: 1 }}
+        transition={{ delay: 2.0, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-neutral-400 dark:text-neutral-600"
       >
         <div className="w-px h-12 bg-gradient-to-b from-transparent via-neutral-400 dark:via-neutral-600 to-transparent"></div>

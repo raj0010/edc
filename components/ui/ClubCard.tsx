@@ -2,45 +2,108 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Club } from '../../types';
 import { cn } from '../../lib/utils';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from './card';
 
-interface ClubCardProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onClick'> {
+// --- Card UI Primitives ---
+
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'rounded-lg border bg-card text-card-foreground shadow-sm',
+      className
+    )}
+    {...props}
+  />
+));
+Card.displayName = 'Card';
+
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('flex flex-col space-y-1.5 p-6', className)}
+    {...props}
+  />
+));
+CardHeader.displayName = 'CardHeader';
+
+const CardTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn(
+      'text-2xl font-semibold leading-none tracking-tight',
+      className
+    )}
+    {...props}
+  />
+));
+CardTitle.displayName = 'CardTitle';
+
+const CardDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn('text-sm text-muted-foreground', className)}
+    {...props}
+  />
+));
+CardDescription.displayName = 'CardDescription';
+
+const CardContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+));
+CardContent.displayName = 'CardContent';
+
+const CardFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('flex items-center p-6 pt-0', className)}
+    {...props}
+  />
+));
+CardFooter.displayName = 'CardFooter';
+
+// --- ClubCard Component ---
+
+interface ClubCardProps {
   club: Club;
   onClick?: () => void;
+  className?: string;
 }
 
-export const ClubCard = ({ club, onClick, className, onKeyDown, ...props }: ClubCardProps) => {
+export const ClubCard = ({ club, onClick, className }: ClubCardProps) => {
   const { icon: Icon, name, description, color, tagline } = club;
-  
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick?.();
-    }
-    onKeyDown?.(e);
-  };
   
   return (
     <Card 
       onClick={onClick}
       className={cn(
         "relative overflow-hidden border-0 rounded-[2rem] transition-all duration-500 shadow-2xl cursor-pointer group select-none",
-        "outline-none focus-visible:ring-4 focus-visible:ring-neutral-900 dark:focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-offset-black",
         "bg-gradient-to-br",
         color,
         className
       )}
       role="button"
       tabIndex={0}
-      onKeyDown={handleKeyDown}
-      {...props}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onClick?.();
+      }}
     >
         {/* --- Background Layers --- */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
