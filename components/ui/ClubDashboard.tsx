@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { Club } from '../../types';
-import { ArrowLeft, Bell, Users, ArrowUpRight, Calendar, MoreHorizontal, Mail, ExternalLink, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Bell, Users, ArrowUpRight, Calendar, MoreHorizontal, Mail, ExternalLink, ChevronDown, Clock, MapPin, UserCircle2, Plus } from 'lucide-react';
 
 interface ClubDashboardProps {
   club: Club;
@@ -14,6 +14,7 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [activeTab, setActiveTab] = useState('About');
   const [expandedLead, setExpandedLead] = useState<number | null>(null);
+  const [isEventExpanded, setIsEventExpanded] = useState(false);
 
   // Animation variants
   const containerVariants: Variants = {
@@ -52,7 +53,7 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
             {/* --- HERO CARD (Spans 3 Columns) --- */}
             <motion.div 
                 variants={itemVariants}
-                className="col-span-1 md:col-span-3 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden min-h-[500px] flex flex-col justify-between group shadow-xl transition-colors"
+                className="col-span-1 md:col-span-3 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-[2.5rem] p-6 md:p-12 relative overflow-hidden min-h-[500px] flex flex-col justify-between group shadow-xl transition-colors"
             >
                 {/* Dynamic Background Glow */}
                 <div className={`absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-gradient-to-br ${club.color} opacity-10 dark:opacity-20 blur-[120px] rounded-full pointer-events-none group-hover:opacity-20 dark:group-hover:opacity-30 transition-opacity duration-1000`}></div>
@@ -115,22 +116,22 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                         className="flex flex-col md:flex-row md:items-end justify-between gap-8"
                       >
                         <div className="max-w-2xl w-full">
-                            <div className="flex flex-col md:flex-row gap-6 md:items-center mb-6">
-                                <div className="w-20 h-20 rounded-3xl bg-white/50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-700/50 backdrop-blur-md flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500" aria-hidden="true">
-                                    <Icon className={`w-10 h-10 ${club.accentColor}`} />
+                            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 sm:items-center mb-6">
+                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-white/50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-700/50 backdrop-blur-md flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500 shrink-0" aria-hidden="true">
+                                    <Icon className={`w-8 h-8 md:w-10 md:h-10 ${club.accentColor}`} />
                                 </div>
                                 <div>
-                                    <h1 className="text-5xl md:text-7xl font-bold font-display tracking-tight leading-[0.9] text-neutral-900 dark:text-white transition-colors">
+                                    <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold font-display tracking-tight leading-[0.9] text-neutral-900 dark:text-white transition-colors">
                                     {club.name}
                                     </h1>
                                 </div>
                             </div>
                             
-                            <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-lg mb-8 font-light transition-colors">
+                            <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-lg mb-8 font-light transition-colors">
                               {club.description}
                             </p>
                             
-                            <div className="flex flex-wrap gap-4 items-center mb-8">
+                            <div className="flex flex-wrap gap-3 md:gap-4 items-center mb-8">
                                <div className={`px-4 py-1.5 rounded-full border border-neutral-200 dark:border-white/10 bg-white/5 ${club.accentColor} text-xs font-bold tracking-wider uppercase flex items-center`}>
                                   <span className={`w-2 h-2 rounded-full bg-current mr-2 animate-pulse`}></span>
                                   Recruiting Now
@@ -197,11 +198,11 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                         </div>
 
                         {/* Stats Column */}
-                        <div className="flex flex-row md:flex-col gap-8 md:gap-4 self-start md:self-end" aria-label="Club Statistics">
+                        <div className="flex flex-row flex-wrap md:flex-col gap-4 md:gap-4 w-full md:w-auto border-t pt-6 md:border-t-0 md:pt-0 border-neutral-200 dark:border-white/10" aria-label="Club Statistics">
                             {club.stats.map((stat, i) => (
-                                <div key={i} className="bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-4 border border-neutral-200 dark:border-white/5 min-w-[120px]">
-                                    <div className={`text-2xl font-bold ${club.accentColor} font-display`}>{stat.value}</div>
-                                    <div className="text-xs text-neutral-500 font-bold uppercase tracking-wider">{stat.label}</div>
+                                <div key={i} className="bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-4 border border-neutral-200 dark:border-white/5 min-w-[100px] md:min-w-[120px] flex-1 md:flex-none">
+                                    <div className={`text-xl md:text-2xl font-bold ${club.accentColor} font-display`}>{stat.value}</div>
+                                    <div className="text-[10px] md:text-xs text-neutral-500 font-bold uppercase tracking-wider">{stat.label}</div>
                                 </div>
                             ))}
                         </div>
@@ -221,27 +222,98 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                         className="w-full h-full flex flex-col justify-center"
                       >
                          <div className="mb-8">
-                             <h2 className="text-4xl font-bold font-display text-neutral-900 dark:text-white mb-2 transition-colors">Upcoming Schedule</h2>
+                             <h2 className="text-3xl md:text-4xl font-bold font-display text-neutral-900 dark:text-white mb-2 transition-colors">Upcoming Schedule</h2>
                              <p className="text-neutral-600 dark:text-neutral-400 transition-colors">Join us for workshops, speaker sessions, and hackathons.</p>
                          </div>
 
                          <div className="grid gap-4">
                             {/* Featured Next Event */}
-                            <button className="w-full text-left p-6 rounded-3xl bg-white/50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer group/event focus:outline-none focus:ring-2 focus:ring-neutral-500">
-                                <div className="flex items-center gap-4">
-                                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${club.color} flex items-center justify-center text-white shadow-lg`}>
-                                        <Calendar className="w-6 h-6" />
+                            <motion.div
+                              layout
+                              className="overflow-hidden rounded-3xl bg-white/50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 transition-colors"
+                            >
+                                <button 
+                                  onClick={() => setIsEventExpanded(!isEventExpanded)}
+                                  className="w-full text-left p-6 flex flex-col md:flex-row md:items-start justify-between gap-4 cursor-pointer group/event focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                                >
+                                    <div className="flex items-start gap-4 flex-1">
+                                        <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${club.color} flex items-center justify-center text-white shadow-lg shrink-0`}>
+                                            <Calendar className="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <div className={`text-xs font-bold ${club.accentColor} uppercase tracking-wider mb-1`}>{club.nextEvent.type}</div>
+                                            <h3 className="text-xl font-bold text-neutral-900 dark:text-white transition-colors">{club.nextEvent.title}</h3>
+                                            
+                                            {/* Brief info for collapsed state */}
+                                            {!isEventExpanded && (
+                                                <div className="flex items-center gap-4 mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+                                                   <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> {club.nextEvent.date.split('•')[1]}</span>
+                                                   <span className="w-1 h-1 rounded-full bg-neutral-300 dark:bg-neutral-600 hidden sm:block"></span>
+                                                   <span className="font-medium text-neutral-700 dark:text-neutral-300 hidden sm:block">Click to view details</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className={`text-xs font-bold ${club.accentColor} uppercase tracking-wider mb-1`}>{club.nextEvent.type}</div>
-                                        <h3 className="text-xl font-bold text-neutral-900 dark:text-white transition-colors">{club.nextEvent.title}</h3>
+                                    
+                                    <div className="flex flex-col items-end gap-4">
+                                         <div className="text-right md:pl-8 md:border-l border-neutral-200 dark:border-white/10">
+                                            <div className="text-2xl font-bold font-display text-neutral-900 dark:text-white transition-colors">{club.nextEvent.date.split('•')[0]}</div>
+                                            <motion.div 
+                                               animate={{ rotate: isEventExpanded ? 180 : 0 }}
+                                               className="flex justify-end mt-1 text-neutral-400 group-hover/event:text-neutral-600 dark:group-hover/event:text-white transition-colors"
+                                            >
+                                                <ChevronDown className="w-5 h-5" />
+                                            </motion.div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="text-right md:pl-8 md:border-l border-neutral-200 dark:border-white/10">
-                                    <div className="text-2xl font-bold font-display text-neutral-900 dark:text-white transition-colors">{club.nextEvent.date.split('•')[0]}</div>
-                                    <div className="text-sm text-neutral-500 dark:text-neutral-400">{club.nextEvent.date.split('•')[1]}</div>
-                                </div>
-                            </button>
+                                </button>
+
+                                <AnimatePresence>
+                                   {isEventExpanded && (
+                                     <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        className="px-6 pb-6 md:pl-20 md:pr-8"
+                                     >
+                                        <div className="pt-4 border-t border-neutral-200 dark:border-white/10">
+                                            <p className="text-neutral-600 dark:text-neutral-300 leading-relaxed mb-6">
+                                              {club.nextEvent.description || "Join us for this exciting event where we dive deep into the latest trends and strategies."}
+                                            </p>
+                                            
+                                            {club.nextEvent.speakers && club.nextEvent.speakers.length > 0 && (
+                                              <div className="mb-6">
+                                                  <h4 className="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-3">Speakers</h4>
+                                                  <div className="flex flex-wrap gap-3">
+                                                      {club.nextEvent.speakers.map((speaker, idx) => (
+                                                          <div key={idx} className="flex items-center gap-3 bg-neutral-100 dark:bg-white/5 pr-4 py-1.5 pl-1.5 rounded-full border border-neutral-200 dark:border-white/5">
+                                                              <div className="w-8 h-8 rounded-full bg-white dark:bg-neutral-800 flex items-center justify-center text-neutral-500 dark:text-neutral-400 border border-neutral-200 dark:border-white/10">
+                                                                  <UserCircle2 className="w-5 h-5" />
+                                                              </div>
+                                                              <div>
+                                                                  <div className="text-xs font-bold text-neutral-900 dark:text-white">{speaker.name}</div>
+                                                                  <div className="text-[10px] text-neutral-500 dark:text-neutral-400">{speaker.role}</div>
+                                                              </div>
+                                                          </div>
+                                                      ))}
+                                                  </div>
+                                              </div>
+                                            )}
+
+                                            <div className="flex gap-3">
+                                                <button className={`px-4 py-2 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-black text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2`}>
+                                                   <Plus className="w-3.5 h-3.5" />
+                                                   Add to Calendar
+                                                </button>
+                                                <button className="px-4 py-2 rounded-xl border border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-neutral-300 text-xs font-bold hover:bg-neutral-100 dark:hover:bg-white/5 transition-colors">
+                                                   View Syllabus
+                                                </button>
+                                            </div>
+                                        </div>
+                                     </motion.div>
+                                   )}
+                                </AnimatePresence>
+                            </motion.div>
                             
                             {/* Placeholder for future events */}
                             <div className="p-6 rounded-3xl bg-white/20 dark:bg-white/5 border border-neutral-200 dark:border-white/5 flex items-center justify-center text-neutral-500 border-dashed" role="note">
@@ -264,7 +336,7 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                         className="w-full h-full flex flex-col justify-center"
                       >
                          <div className="mb-8">
-                             <h2 className="text-4xl font-bold font-display text-neutral-900 dark:text-white mb-2 transition-colors">Member Resources</h2>
+                             <h2 className="text-3xl md:text-4xl font-bold font-display text-neutral-900 dark:text-white mb-2 transition-colors">Member Resources</h2>
                              <p className="text-neutral-600 dark:text-neutral-400 transition-colors">Exclusive tools and guides for club members.</p>
                          </div>
 

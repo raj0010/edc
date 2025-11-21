@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Club } from '../types';
 import { ClubCard } from './ui/ClubCard';
+import { Sparkles, Hand } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface ClubShowcaseProps {
   clubs: Club[];
@@ -9,146 +11,158 @@ interface ClubShowcaseProps {
 }
 
 export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore }) => {
-  const [hoveredClubId, setHoveredClubId] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const hoveredClub = clubs.find(c => c.id === hoveredClubId) || null;
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-  // Dynamic Background Color based on hovered club
-  const getGradientColor = () => {
-    if (!hoveredClub) return 'bg-indigo-500/5 dark:bg-indigo-500/10';
-    if (hoveredClub.id === 'marketing') return 'bg-pink-500/10';
-    if (hoveredClub.id === 'startup') return 'bg-violet-500/10';
-    if (hoveredClub.id === 'consulting') return 'bg-blue-500/10';
-    if (hoveredClub.id === 'finance') return 'bg-emerald-500/10';
-    return 'bg-neutral-500/10';
+  const handleCardClick = (index: number, clubId: string) => {
+    if (isMobile) {
+      if (activeIndex === index) {
+        onExplore(clubId);
+      } else {
+        setActiveIndex(index);
+      }
+    } else {
+      onExplore(clubId);
+    }
   };
 
   return (
-    <section 
-      id="club-showcase" 
-      className="relative py-24 md:py-32 bg-neutral-50 dark:bg-black overflow-hidden border-t border-neutral-200 dark:border-white/5 transition-colors duration-500"
-    >
-       {/* --- Ambient Dynamic Background --- */}
-       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className={`w-[800px] h-[800px] rounded-full blur-[120px] transition-colors duration-700 ${getGradientColor()}`}></div>
-       </div>
-       
-       <div className="container mx-auto px-4 z-10 flex flex-col items-center relative">
+    <section id="club-showcase" className="relative py-12 md:py-24 bg-neutral-50 dark:bg-neutral-950 overflow-hidden transition-colors duration-500 min-h-[60vh] md:min-h-[70vh] flex flex-col justify-center">
+      
+      {/* Background Ambiance */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(120,119,198,0.1),transparent_50%)]"></div>
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-gradient-to-t from-neutral-200/20 dark:from-neutral-900/40 to-transparent blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10 flex flex-col items-center">
         
-        {/* --- Dynamic Header --- */}
-        <div className="mb-12 md:mb-24 text-center h-32 flex flex-col items-center justify-center">
-            <AnimatePresence mode="wait">
-              {hoveredClub ? (
-                 <motion.div
-                    key={hoveredClub.id}
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex flex-col items-center"
-                 >
-                    <h2 className={`text-4xl md:text-6xl font-bold mb-2 font-display tracking-tight ${hoveredClub.accentColor}`}>
-                       {hoveredClub.name}
-                    </h2>
-                    <p className="text-lg text-neutral-600 dark:text-neutral-300 font-medium">{hoveredClub.tagline}</p>
-                 </motion.div>
-              ) : (
-                 <motion.div
-                    key="default"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex flex-col items-center"
-                 >
-                    <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white font-display mb-4 tracking-tight">
-                      Choose Your Path
-                    </h2>
-                    <p className="text-neutral-500 dark:text-neutral-400 text-lg max-w-xl text-center">
-                       Hover over the cards to explore our specialized clubs.
-                    </p>
-                 </motion.div>
-              )}
-            </AnimatePresence>
+        {/* Header */}
+        <div className="text-center mb-8 md:mb-16 max-w-3xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 backdrop-blur-md mb-6"
+          >
+            <Sparkles className="w-4 h-4 text-amber-500" />
+            <span className="text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">The Ecosystem</span>
+          </motion.div>
+          
+          <h2 className="text-4xl md:text-6xl font-bold font-display text-neutral-900 dark:text-white mb-6 tracking-tight">
+            Choose Your Path
+          </h2>
+          <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto font-light">
+            {isMobile ? "Tap a card to view details. Tap again to enter." : "Hover to explore. Click to enter."}
+          </p>
         </div>
 
-        {/* --- FAN LAYOUT (Desktop) --- */}
-        <div className="hidden md:flex relative w-full max-w-5xl h-[500px] mx-auto perspective-1000 justify-center items-center">
-           <div className="relative flex justify-center items-end w-full h-full pb-20">
-             {clubs.map((club, index) => {
-               // Fan configuration
-               const total = clubs.length;
-               const center = (total - 1) / 2;
-               const i = index - center;
-               
-               const isHovered = hoveredClubId === club.id;
-               
-               // Fan Calculation:
-               // Rotate around bottom center.
-               // Spread x slightly to unstack them.
-               // Lift y slightly for arch effect (center higher)
-               
-               // Increased angles and spacing for a wider fan effect
-               const baseRotate = i * 8; 
-               const baseX = i * 70;      
-               const baseY = Math.abs(i) * 15; 
+        {/* Responsive Fan Layout */}
+        <div className="relative h-[340px] md:h-[420px] w-full max-w-4xl mx-auto flex items-center md:items-end justify-center perspective-[1000px]">
+           {clubs.map((club, index) => {
+              const total = clubs.length;
+              const offset = index - (total - 1) / 2; 
+              
+              const isActive = activeIndex === index;
+              const isAnyActive = activeIndex !== null;
+              
+              // --- Desktop Configuration ---
+              const dtSpacing = 110; 
+              const dtRotate = offset * 5;
+              const dtY = Math.abs(offset) * 15;
 
-               return (
-                 <motion.div
-                   key={club.id}
-                   className="absolute w-[280px] h-[400px] cursor-pointer"
-                   style={{ 
-                     transformOrigin: 'bottom center',
-                     zIndex: isHovered ? 50 : index // Instant z-index switch for stacking context
-                   }}
-                   initial={{ x: baseX, y: baseY, rotate: baseRotate, scale: 1 }}
-                   animate={{ 
-                     x: baseX, 
-                     y: isHovered ? -50 : baseY, // Reduced lift from -100 to -50
-                     rotate: isHovered ? 0 : baseRotate, // Straighten on hover
-                     scale: isHovered ? 1.05 : 1, // Reduced scale from 1.1 to 1.05
-                     zIndex: isHovered ? 50 : index 
-                   }}
-                   transition={{ 
-                     type: "spring", 
-                     stiffness: 300, // Slightly softer spring
-                     damping: 25,
-                     mass: 0.8 
-                   }}
-                   onHoverStart={() => setHoveredClubId(club.id)}
-                   onHoverEnd={() => setHoveredClubId(null)}
-                 >
+              // --- Mobile Configuration ---
+              // Tighter stacking, wider rotation fan
+              const mbSpacing = 30; 
+              const mbRotate = offset * 8; 
+              const mbY = Math.abs(offset) * 8; 
+
+              // Select Config
+              const spacing = isMobile ? mbSpacing : dtSpacing;
+              const baseRotate = isMobile ? mbRotate : dtRotate;
+              const baseY = isMobile ? mbY : dtY;
+
+              let rotate = baseRotate;
+              let x = offset * spacing;
+              let y = baseY;
+              let scale = 1;
+              let zIndex = index;
+              let opacity = 1;
+              let filter = "none";
+
+              if (isActive) {
+                  rotate = 0;
+                  scale = isMobile ? 1.1 : 1.15;
+                  zIndex = 50;
+                  y = isMobile ? -20 : -80; // Pop up amount
+                  if (isMobile) {
+                      x = 0; // Center on mobile
+                  }
+              } else if (isAnyActive) {
+                  // Inactive Siblings
+                  scale = 0.95;
+                  opacity = isMobile ? 0.4 : 0.6;
+                  filter = "blur(2px) grayscale(0.5)";
+              }
+
+              return (
+                <motion.div
+                  key={club.id}
+                  // Initial entrance animation
+                  initial={{ opacity: 0, y: 500, rotate: 0 }}
+                  whileInView={{ opacity: opacity, y: baseY, rotate: baseRotate, x: offset * spacing }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    type: "spring", 
+                    stiffness: 120, 
+                    damping: 20, 
+                    delay: index * 0.1 
+                  }}
+                  // Reactive animation
+                  animate={{
+                    rotate: rotate,
+                    x: x,
+                    y: y,
+                    scale: scale,
+                    zIndex: zIndex,
+                    opacity: opacity,
+                    filter: filter
+                  }}
+                  onHoverStart={() => !isMobile && setActiveIndex(index)}
+                  onHoverEnd={() => !isMobile && setActiveIndex(null)}
+                  onClick={() => handleCardClick(index, club.id)}
+                  style={{
+                    transformOrigin: "50% 120%", // Pivot from bottom center
+                    position: 'absolute',
+                    bottom: isMobile ? '10%' : 0, // Lift slightly on mobile
+                  }}
+                  className="w-[180px] h-[260px] md:w-[220px] md:h-[320px] cursor-pointer will-change-transform touch-manipulation"
+                >
                    <ClubCard 
-                      club={club} 
-                      onClick={() => onExplore(club.id)} 
-                      className="w-full h-full shadow-2xl hover:shadow-neutral-500/40 dark:hover:shadow-white/20 border border-neutral-200 dark:border-white/5 transition-shadow duration-300"
+                     club={club} 
+                     className="h-full w-full shadow-2xl hover:shadow-3xl transition-shadow duration-300 border border-white/10"
                    />
-                 </motion.div>
-               );
-             })}
-           </div>
+                   
+                   {/* Mobile Tap Hint Overlay (only if nothing active) */}
+                   {isMobile && !isAnyActive && (
+                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 animate-[pulse_3s_ease-in-out_infinite]">
+                           <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                               <Hand className="w-4 h-4 text-white opacity-80" />
+                           </div>
+                       </div>
+                   )}
+                </motion.div>
+              );
+           })}
         </div>
 
-        {/* --- LIST LAYOUT (Mobile) --- */}
-        <div className="md:hidden w-full flex flex-col gap-6">
-           {clubs.map((club, index) => (
-             <motion.div
-               key={club.id}
-               initial={{ opacity: 0, y: 50 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ delay: index * 0.1 }}
-               className="h-[400px] w-full"
-               onClick={() => setHoveredClubId(club.id)}
-             >
-               <ClubCard 
-                  club={club} 
-                  onClick={() => onExplore(club.id)} 
-                  className="w-full h-full shadow-xl"
-               />
-             </motion.div>
-           ))}
-        </div>
       </div>
     </section>
   );

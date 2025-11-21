@@ -12,6 +12,8 @@ export interface ClubEvent {
   title: string;
   date: string;
   type: string;
+  description?: string;
+  speakers?: { name: string; role: string }[];
 }
 
 export interface Club {

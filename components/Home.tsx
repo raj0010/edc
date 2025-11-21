@@ -6,6 +6,7 @@ import { Club } from '../types';
 import { VelocityScroll } from './ui/VelocityScroll';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Star } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface HomeProps {
   clubs: Club[];
@@ -28,6 +29,24 @@ const ShootingStar = ({ delay, top, left }: { delay: number; top: string; left: 
   />
 );
 
+interface RevealSectionProps {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}
+
+const RevealSection: React.FC<RevealSectionProps> = ({ children, className, delay = 0 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{ duration: 0.8, delay, ease: "easeOut" }}
+    className={cn("w-full", className)}
+  >
+    {children}
+  </motion.div>
+);
+
 export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-black overflow-x-hidden relative">
@@ -35,21 +54,35 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
       <div className="fixed inset-0 z-[1] pointer-events-none opacity-[0.04] dark:opacity-[0.06] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
       <div className="relative z-10">
-        <Hero />
+        <RevealSection>
+          <Hero />
+        </RevealSection>
         
-        <ClubShowcase clubs={clubs} onExplore={onNavigate} />
+        <RevealSection delay={0.1}>
+          <ClubShowcase clubs={clubs} onExplore={onNavigate} />
+        </RevealSection>
 
-        <Features />
+        <RevealSection delay={0.1}>
+          <Features />
+        </RevealSection>
         
         <div className="relative z-10 bg-neutral-50 dark:bg-black">
-          <VelocityScroll 
-            text="MARKETING • FINANCE • STARTUP • CONSULTING •" 
-            default_velocity={3}
-            className="text-neutral-800/20 dark:text-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-700 transition-colors duration-500"
-          />
+          <RevealSection>
+            <VelocityScroll 
+              text="MARKETING • FINANCE • STARTUP • CONSULTING •" 
+              default_velocity={3}
+              className="text-neutral-800/20 dark:text-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-700 transition-colors duration-500"
+            />
+          </RevealSection>
           
           {/* --- Mission / Why Join Section --- */}
-          <section className="py-24 md:py-32 relative overflow-hidden border-t border-neutral-200 dark:border-neutral-900">
+          <motion.section 
+             initial={{ opacity: 0, y: 50 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true, margin: "-50px" }}
+             transition={{ duration: 0.8, ease: "easeOut" }}
+             className="py-24 md:py-32 relative overflow-hidden border-t border-neutral-200 dark:border-neutral-900"
+          >
              
              {/* Background Visuals for Mission Section */}
              <div className="absolute inset-0 bg-neutral-100/50 dark:bg-black">
@@ -171,7 +204,7 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
 
                </div>
              </div>
-          </section>
+          </motion.section>
         </div>
       </div>
     </div>

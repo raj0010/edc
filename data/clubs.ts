@@ -20,7 +20,12 @@ export const clubs: Club[] = [
     nextEvent: {
       title: 'Viral Marketing 101',
       date: 'Oct 12 • 5:00 PM',
-      type: 'Workshop'
+      type: 'Workshop',
+      description: 'Learn the psychology behind viral content. We will dissect successful campaigns from major brands and teach you how to craft hooks that capture attention instantly. Includes a live brainstorming session.',
+      speakers: [
+        { name: 'Emily Cooper', role: 'Social Media Lead, Vogue' },
+        { name: 'David Kim', role: 'Brand Strategist' }
+      ]
     },
     stats: [
       { label: 'Campaigns', value: '12+' },
@@ -46,7 +51,12 @@ export const clubs: Club[] = [
     nextEvent: {
       title: 'Pitch Perfect Night',
       date: 'Oct 15 • 6:30 PM',
-      type: 'Competition'
+      type: 'Competition',
+      description: 'Watch 5 selected student startups pitch their ideas to a panel of angel investors and alumni. Networking session with refreshments will follow the main event.',
+      speakers: [
+        { name: 'Sarah Blakely', role: 'Angel Investor' },
+        { name: 'Marcus Lemonis', role: 'Serial Entrepreneur' }
+      ]
     },
     stats: [
       { label: 'Startups', value: '45' },
@@ -72,7 +82,12 @@ export const clubs: Club[] = [
     nextEvent: {
       title: 'McKinsey Case Crack',
       date: 'Oct 18 • 4:00 PM',
-      type: 'Seminar'
+      type: 'Seminar',
+      description: 'A deep dive into solving profitability cases. This session covers framework selection, mental math shortcuts, and how to synthesize a recommendation like a top-tier consultant.',
+      speakers: [
+        { name: 'James O\'Neil', role: 'Associate, McKinsey' },
+        { name: 'Linda Wu', role: 'Ex-BCG Consultant' }
+      ]
     },
     stats: [
       { label: 'Projects', value: '30+' },
@@ -98,7 +113,12 @@ export const clubs: Club[] = [
     nextEvent: {
       title: 'Market Makers Summit',
       date: 'Oct 22 • 5:30 PM',
-      type: 'Conference'
+      type: 'Conference',
+      description: 'An evening discussing the current macroeconomic landscape, interest rate policies, and emerging market trends. Featuring a keynote on algorithmic trading.',
+      speakers: [
+        { name: 'Gordon Gekko', role: 'Hedge Fund Manager' },
+        { name: 'Naomi Lapaglia', role: 'FinTech Innovator' }
+      ]
     },
     stats: [
       { label: 'AUM', value: '$50k' },
