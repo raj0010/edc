@@ -25,7 +25,7 @@ const ShootingStar = ({ delay, top, left }: { delay: number; top: string; left: 
       ease: "linear"
     }}
     style={{ top, left }}
-    className="absolute w-[200px] h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent rotate-45 pointer-events-none z-0"
+    className="absolute w-[200px] h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent rotate-45 pointer-events-none z-0 will-change-transform"
   />
 );
 
@@ -41,7 +41,7 @@ const RevealSection: React.FC<RevealSectionProps> = ({ children, className, dela
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-50px" }}
     transition={{ duration: 0.8, delay, ease: "easeOut" }}
-    className={cn("w-full", className)}
+    className={cn("w-full will-change-transform", className)}
   >
     {children}
   </motion.div>
@@ -49,11 +49,25 @@ const RevealSection: React.FC<RevealSectionProps> = ({ children, className, dela
 
 export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-black overflow-x-hidden relative">
-      {/* Global Noise Overlay */}
-      <div className="fixed inset-0 z-[1] pointer-events-none opacity-[0.04] dark:opacity-[0.06] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+    <div className="relative text-neutral-900 dark:text-white w-full flex flex-col">
+      
+      {/* --- GLOBAL BACKGROUND LAYER --- */}
+      <div className="fixed inset-0 z-0 w-full h-full pointer-events-none">
+          {/* Base Background Color - Adapts to Theme */}
+          <div className="absolute inset-0 bg-neutral-50 dark:bg-black transition-colors duration-700" />
 
-      <div className="relative z-10">
+          {/* Animated Gradient Blobs */}
+          <div className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-rose-200/40 dark:bg-purple-900/20 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob opacity-70" />
+          <div className="absolute top-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-blue-200/40 dark:bg-indigo-900/20 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-2000 opacity-70" />
+          <div className="absolute bottom-[-20%] left-[10%] w-[60vw] h-[60vw] bg-amber-100/50 dark:bg-cyan-900/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-4000 opacity-70" />
+           <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-emerald-100/40 dark:bg-teal-900/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-6000 opacity-70" />
+      </div>
+
+      {/* Noise Overlay */}
+      <div className="fixed inset-0 z-[1] pointer-events-none opacity-[0.04] dark:opacity-[0.06] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] will-change-transform translate-z-0"></div>
+
+      {/* Content Layer */}
+      <div className="relative z-10 flex flex-col">
         <RevealSection>
           <Hero />
         </RevealSection>
@@ -66,12 +80,12 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
           <Features />
         </RevealSection>
         
-        <div className="relative z-10 bg-neutral-50 dark:bg-black">
+        <div className="relative z-10">
           <RevealSection>
             <VelocityScroll 
               text="MARKETING • FINANCE • STARTUP • CONSULTING •" 
               default_velocity={3}
-              className="text-neutral-800/20 dark:text-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-700 transition-colors duration-500"
+              className="text-neutral-800/20 dark:text-white/20 hover:text-neutral-900 dark:hover:text-white/40 transition-colors duration-500"
             />
           </RevealSection>
           
@@ -81,19 +95,12 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
              whileInView={{ opacity: 1, y: 0 }}
              viewport={{ once: true, margin: "-50px" }}
              transition={{ duration: 0.8, ease: "easeOut" }}
-             className="py-24 md:py-32 relative overflow-hidden border-t border-neutral-200 dark:border-neutral-900"
+             className="pt-10 md:pt-16 pb-0 relative overflow-hidden border-t border-neutral-200/50 dark:border-neutral-800/50 backdrop-blur-sm bg-white/30 dark:bg-black/30"
           >
              
-             {/* Background Visuals for Mission Section */}
-             <div className="absolute inset-0 bg-neutral-100/50 dark:bg-black">
-                {/* Grid */}
+             {/* Background Visuals for Mission Section - Localized Intensity */}
+             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-                
-                {/* Gradient Orbs */}
-                <div className="absolute left-0 bottom-0 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[128px] pointer-events-none"></div>
-                <div className="absolute right-0 top-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[128px] pointer-events-none"></div>
-
-                {/* Shooting Stars */}
                 <div className="absolute inset-0 overflow-hidden">
                     <ShootingStar delay={1} top="10%" left="20%" />
                     <ShootingStar delay={3} top="30%" left="60%" />
@@ -102,8 +109,8 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
                 </div>
              </div>
 
-             <div className="container mx-auto px-6 relative z-10">
-               <div className="flex flex-col md:flex-row gap-16 items-start">
+             <div className="container mx-auto px-6 relative z-10 mb-8">
+               <div className="flex flex-col md:flex-row gap-10 items-start">
                   
                   {/* Left: Content */}
                   <div className="flex-1">
@@ -111,7 +118,7 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-emerald-600 dark:text-emerald-500 font-bold tracking-widest uppercase text-xs mb-4 block"
+                        className="text-emerald-600 dark:text-emerald-400 font-bold tracking-widest uppercase text-xs mb-3 block"
                      >
                         Join The Revolution
                      </motion.span>
@@ -120,31 +127,29 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-6xl font-bold text-neutral-900 dark:text-white mb-6 font-display leading-tight"
+                        className="text-3xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-5 font-display leading-tight"
                      >
                        Where Ideas Rise.<br />
-                       Leaders Emerge.<br />
-                       <span className="text-neutral-400 dark:text-neutral-600">Startups Begin.</span>
+                       Leaders Emerge.
                      </motion.h2>
                      <motion.p 
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 mb-12 font-light leading-relaxed"
+                        className="text-lg text-neutral-700 dark:text-neutral-300 mb-8 font-light leading-relaxed"
                      >
-                       At the Entrepreneur Development Cell, we believe that every student carries a spark—an idea waiting to be ignited. We are the hub of innovation, creativity, and entrepreneurial energy on campus, committed to empowering thinkers, dreamers, and future founders.
+                       At the Entrepreneur Development Cell, we believe that every student carries a spark—an idea waiting to be ignited. We are the hub of innovation, creativity, and entrepreneurial energy on campus.
                      </motion.p>
                      
-                     <div className="mb-8">
-                        <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-6">Why Join EDC?</h3>
-                        <div className="grid grid-cols-1 gap-5">
+                     <div className="mb-6">
+                        <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-4">Why Join EDC?</h3>
+                        <div className="grid grid-cols-1 gap-3">
                            {[
                              "Learn from founders, mentors, and industry experts",
-                             "Participate in hackathons, startup challenges, and pitchfests",
-                             "Turn your ideas into real-world products and ventures",
-                             "Meet passionate peers, collaborators, and future co-founders",
-                             "Get exclusive access to resources, incubation support, and funding opportunities"
+                             "Participate in hackathons and startup challenges",
+                             "Turn your ideas into real-world products",
+                             "Meet passionate peers and future co-founders"
                            ].map((item, i) => (
                              <motion.div 
                                key={i}
@@ -152,12 +157,12 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
                                whileInView={{ opacity: 1, x: 0 }}
                                viewport={{ once: true }}
                                transition={{ delay: i * 0.1 + 0.3 }}
-                               className="flex items-start group cursor-default"
+                               className="flex items-center group cursor-default"
                              >
-                                <div className="w-6 h-6 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center mr-4 mt-0.5 group-hover:border-emerald-500/50 transition-colors shadow-sm shrink-0">
-                                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                <div className="w-4 h-4 rounded-full bg-white/80 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center mr-3 group-hover:border-emerald-500/50 transition-colors shadow-sm shrink-0">
+                                   <CheckCircle2 className="w-2.5 h-2.5 text-emerald-500" />
                                 </div>
-                                <span className="text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors font-medium text-base">{item}</span>
+                                <span className="text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors font-medium text-sm">{item}</span>
                              </motion.div>
                            ))}
                         </div>
@@ -171,30 +176,29 @@ export const Home: React.FC<HomeProps> = ({ clubs, onNavigate }) => {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.4 }}
-                        className="p-10 md:p-12 rounded-[2.5rem] bg-white/60 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 backdrop-blur-xl relative overflow-hidden group hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors duration-500 shadow-2xl"
+                        className="p-8 md:p-10 rounded-[2rem] bg-white/40 dark:bg-neutral-900/40 border border-white/50 dark:border-white/10 backdrop-blur-xl relative overflow-hidden group hover:border-white/80 dark:hover:border-white/20 transition-colors duration-500 shadow-2xl"
                      >
-                        {/* Quote Icon Background */}
                         <div className="absolute top-0 right-0 p-12 opacity-5 dark:opacity-10 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity">
                            <Star className="w-32 h-32 text-neutral-900 dark:text-white fill-current" />
                         </div>
                         
                         <div className="relative z-10">
-                          <div className="flex items-center gap-3 mb-8">
-                              <div className="w-12 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"></div>
-                              <span className="text-sm font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">Our Mission</span>
+                          <div className="flex items-center gap-3 mb-6">
+                              <div className="w-10 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"></div>
+                              <span className="text-xs font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">Our Mission</span>
                           </div>
                           
-                          <h3 className="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-white mb-8 font-display leading-tight">
-                            "To cultivate a dynamic entrepreneurial culture on campus by fostering innovation, leadership, and problem-solving skills—empowering students to become creators of change."
+                          <h3 className="text-xl md:text-2xl font-bold text-neutral-900 dark:text-white mb-6 font-display leading-tight">
+                            "To cultivate a dynamic entrepreneurial culture on campus by fostering innovation, leadership, and problem-solving skills."
                           </h3>
                           
-                          <div className="flex items-center gap-4 mt-8 pt-8 border-t border-neutral-200/50 dark:border-neutral-700/50">
+                          <div className="flex items-center gap-4 mt-6 pt-6 border-t border-neutral-200/30 dark:border-white/10">
                              <div className="flex -space-x-3">
                                 {[1, 2, 3].map((i) => (
-                                   <div key={i} className="w-10 h-10 rounded-full bg-neutral-200 dark:bg-neutral-800 border-2 border-white dark:border-neutral-900"></div>
+                                   <div key={i} className="w-8 h-8 rounded-full bg-neutral-200 dark:bg-neutral-800 border-2 border-white dark:border-neutral-900"></div>
                                 ))}
                              </div>
-                             <div className="text-sm text-neutral-600 dark:text-neutral-400">
+                             <div className="text-xs text-neutral-600 dark:text-neutral-400">
                                 <span className="font-bold text-neutral-900 dark:text-white">500+</span> Students Empowered
                              </div>
                           </div>

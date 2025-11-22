@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sparkles, ArrowRight } from 'lucide-react';
 import { ThemeToggle } from './ui/ThemeToggle';
@@ -12,16 +12,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <>
@@ -29,42 +20,29 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin 
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out px-4 md:px-6 pointer-events-none", // pointer-events-none on container to let clicks pass through sides
-          isScrolled ? "py-4" : "py-6"
-        )}
+        className="fixed top-0 left-0 right-0 z-50 py-4 px-4 md:px-6 pointer-events-none flex justify-center"
       >
-        <div className={cn(
-          "mx-auto max-w-7xl transition-all duration-500 pointer-events-auto flex items-center justify-between", // pointer-events-auto on content
-          isScrolled 
-            ? "bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-full border border-neutral-200/50 dark:border-white/10 shadow-xl shadow-black/5 px-6 py-3 w-full md:w-auto md:min-w-[800px]"
-            : "bg-transparent px-0 w-full"
-        )}>
+        <div className="pointer-events-auto flex items-center justify-between bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-full border border-neutral-200/50 dark:border-white/10 shadow-xl shadow-black/5 px-4 pl-5 py-2.5 w-full md:w-auto md:min-w-[700px] lg:min-w-[800px] transition-all duration-300">
             {/* Logo */}
             <div 
               className="flex items-center gap-3 font-bold text-xl tracking-tighter font-display cursor-pointer group" 
               onClick={() => onNavigate('home')}
             >
-              <div className="w-9 h-9 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-neutral-900 shadow-lg group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 bg-neutral-900 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-neutral-900 shadow-lg group-hover:scale-105 transition-transform">
                  <span className="font-display font-black text-lg">N</span>
               </div>
-              <span className={cn("transition-colors duration-300 hidden sm:inline-block", isScrolled ? "text-neutral-900 dark:text-white" : "text-neutral-900 dark:text-white mix-blend-difference")}>EDC Nexus</span>
+              <span className="transition-colors duration-300 hidden sm:inline-block text-neutral-900 dark:text-white">EDC Nexus</span>
             </div>
 
             {/* Desktop Nav */}
-            <div className={cn(
-                "hidden md:flex items-center gap-1 p-1.5 rounded-full border transition-all duration-500",
-                isScrolled 
-                    ? "bg-neutral-100/50 dark:bg-white/5 border-neutral-200/50 dark:border-white/5" 
-                    : "bg-white/50 dark:bg-black/30 backdrop-blur-md border-white/20 dark:border-white/10"
-            )}>
+            <div className="hidden md:flex items-center gap-1">
                <button
                   onClick={() => onNavigate('home')}
                   className={cn(
                     "px-5 py-2 rounded-full text-sm font-medium transition-all duration-300",
                     currentPage === 'home'
-                      ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
-                      : "text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10"
+                      ? "bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-white shadow-sm font-bold"
+                      : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/50 dark:hover:bg-white/5"
                   )}
                 >
                   Hub
@@ -74,10 +52,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin 
                     key={club.id}
                     onClick={() => onNavigate(club.id)}
                     className={cn(
-                      "px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 relative",
+                      "px-5 py-2 rounded-full text-sm font-medium transition-all duration-300",
                       currentPage === club.id
-                        ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
-                        : "text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10"
+                        ? "bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-white shadow-sm font-bold"
+                        : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/50 dark:hover:bg-white/5"
                     )}
                   >
                     {club.name.replace(' Club', '')}
@@ -86,38 +64,30 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin 
             </div>
 
             {/* Actions */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2">
                <ThemeToggle />
                <button 
                  onClick={onJoin}
-                 className={cn(
-                   "group relative px-6 py-2.5 bg-neutral-900 dark:bg-white text-white dark:text-black text-sm font-bold rounded-full overflow-hidden transition-all shadow-lg hover:shadow-xl",
-                   isScrolled ? "" : "shadow-neutral-900/20 dark:shadow-white/10"
-                 )}
+                 className="group relative px-5 py-2 bg-neutral-900 dark:bg-white text-white dark:text-black text-sm font-bold rounded-full overflow-hidden transition-all shadow-md hover:shadow-lg ml-1"
                >
                  <span className="relative z-10 flex items-center gap-2">
-                    <span>Join Us</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <span>Join</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                  </span>
                  <div className="absolute inset-0 bg-gradient-to-r from-neutral-700 to-black dark:from-neutral-300 dark:to-white opacity-0 group-hover:opacity-100 transition-opacity" />
                </button>
             </div>
 
             {/* Mobile Menu Toggle */}
-            <div className="md:hidden flex items-center gap-3">
-               <div className={cn("transition-opacity", isScrolled ? "opacity-100" : "opacity-0 pointer-events-none")}>
+            <div className="md:hidden flex items-center gap-2">
+               <div className="scale-90">
                    <ThemeToggle />
                </div>
                <button 
                   onClick={() => setIsMobileMenuOpen(true)} 
-                  className={cn(
-                    "p-2 rounded-full transition-colors", 
-                    isScrolled 
-                        ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white" 
-                        : "bg-white/80 dark:bg-black/50 backdrop-blur-md text-neutral-900 dark:text-white"
-                  )}
+                  className="p-2 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
                 >
-                  <Menu className="w-6 h-6" />
+                  <Menu className="w-5 h-5" />
                </button>
             </div>
         </div>

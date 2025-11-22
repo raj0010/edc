@@ -43,7 +43,8 @@ function ParallaxText({ children, baseVelocity = 100, className }: ParallaxProps
 
   const directionFactor = useRef<number>(1);
   useAnimationFrame((t, delta) => {
-    let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
+    const d = Math.min(delta, 100); 
+    let moveBy = directionFactor.current * baseVelocity * (d / 1000);
 
     if (velocityFactor.get() < 0) {
       directionFactor.current = -1;
@@ -59,7 +60,7 @@ function ParallaxText({ children, baseVelocity = 100, className }: ParallaxProps
   return (
     <div className="parallax overflow-hidden m-0 whitespace-nowrap flex flex-nowrap leading-[0.8]">
       <motion.div 
-        className={cn("scroller font-display font-black uppercase text-6xl md:text-8xl lg:text-9xl tracking-tighter flex whitespace-nowrap flex-nowrap text-transparent bg-clip-text bg-gradient-to-b from-neutral-500 to-neutral-800 select-none", className)} 
+        className={cn("scroller font-display font-black uppercase text-6xl md:text-8xl lg:text-9xl tracking-tighter flex whitespace-nowrap flex-nowrap text-transparent bg-clip-text bg-gradient-to-b from-neutral-500 to-neutral-800 select-none will-change-transform", className)} 
         style={{ x }}
       >
         <span className="block mr-12 md:mr-24">{children} </span>
@@ -73,11 +74,9 @@ function ParallaxText({ children, baseVelocity = 100, className }: ParallaxProps
 
 export const VelocityScroll: React.FC<VelocityScrollProps> = ({ text, default_velocity = 5, className }) => {
   return (
-    <section className="relative w-full py-16 bg-black border-y border-neutral-900 overflow-hidden flex flex-col gap-8">
+    <section className="relative w-full py-4 bg-black border-y border-neutral-900 overflow-hidden flex flex-col gap-2">
       <ParallaxText baseVelocity={default_velocity} className={className}>{text}</ParallaxText>
       <ParallaxText baseVelocity={-default_velocity} className={className}>{text}</ParallaxText>
-      
-      {/* Vignette Overlay for cinematic feel */}
       <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black pointer-events-none z-10"></div>
     </section>
   );
