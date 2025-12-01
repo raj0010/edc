@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export const LoadingScreen: React.FC = () => {
   return (
-    <div className="fixed inset-0 z-[100] bg-neutral-950 flex flex-col items-center justify-center">
+    <div className="fixed inset-0 z-[100] bg-neutral-950 dark:bg-[#0F0F0F] flex flex-col items-center justify-center transition-colors duration-300">
       <div className="relative">
         <motion.div
           animate={{

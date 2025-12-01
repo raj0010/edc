@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Rocket, TrendingUp, Megaphone, Briefcase, Globe2, ArrowUpRight, GraduationCap, Building2 } from 'lucide-react';
+import { MapPin, Users, Rocket, TrendingUp, Megaphone, Briefcase, Globe2, ArrowUpRight, GraduationCap, Building2, LayoutGrid } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 // --- Types ---
@@ -105,41 +105,17 @@ const ClubListVisual = () => {
 
 export const BentoGrid: React.FC = () => {
   return (
-    <section className="py-24 px-4 bg-neutral-50 dark:bg-[#050505] transition-colors duration-500">
+    <section className="py-24 px-4 bg-transparent">
       <div className="max-w-7xl mx-auto">
         
-        {/* Section Header */}
-        <div className="mb-16 flex flex-col md:flex-row items-end justify-between gap-6">
-            <div className="max-w-2xl">
-                <motion.div 
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    className="flex items-center gap-2 mb-4"
-                >
-                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">Institutional Framework</span>
-                </motion.div>
-                <motion.h2 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 }}
-                    className="text-4xl md:text-6xl font-black font-display text-neutral-900 dark:text-white tracking-tighter leading-[0.9]"
-                >
-                    ONE SCHOOL. <br/>
-                    <span className="text-neutral-400 dark:text-neutral-600">LIMITLESS REACH.</span>
-                </motion.h2>
+        {/* Simplified Section Header for Flow */}
+        <div className="mb-12 flex items-center gap-3">
+            <div className="p-2 bg-neutral-900 dark:bg-white rounded-lg">
+                <LayoutGrid className="w-5 h-5 text-white dark:text-black" />
             </div>
-            <motion.p 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="text-neutral-500 dark:text-neutral-400 max-w-xs text-sm leading-relaxed text-right hidden md:block"
-            >
-                The Entrepreneur Development Cell is the student-led engine driving innovation across the entire University School of Management network.
-            </motion.p>
+            <h2 className="text-2xl font-bold font-display uppercase tracking-widest text-neutral-900 dark:text-white">
+                Network Infrastructure
+            </h2>
         </div>
 
         {/* The Grid - 4 Columns Desktop, 1 Column Mobile */}

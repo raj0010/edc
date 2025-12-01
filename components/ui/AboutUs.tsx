@@ -35,7 +35,7 @@ const features = [
 
 export const AboutUs: React.FC = () => {
   return (
-    <section className="relative py-32 bg-white dark:bg-black overflow-hidden">
+    <section className="relative py-32 bg-white dark:bg-[#0F0F0F] overflow-hidden transition-colors duration-300">
        <div className="container mx-auto px-6 relative z-10">
           
           <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
@@ -67,7 +67,7 @@ export const AboutUs: React.FC = () => {
                     The Entrepreneur Development Cell (EDC) is the flagship student body of the University School of Management. We bridge the gap between academic theory and real-world business execution.
                 </p>
 
-                <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest border-b border-neutral-900 dark:border-white pb-1 hover:gap-4 transition-all">
+                <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest border-b border-neutral-900 dark:border-white pb-1 hover:gap-4 transition-all text-neutral-900 dark:text-white">
                     Read University Manifesto <ArrowRight className="w-3 h-3" />
                 </button>
              </div>
@@ -81,7 +81,7 @@ export const AboutUs: React.FC = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1 }}
-                        className="p-8 rounded-[2rem] bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors group"
+                        className="p-8 rounded-[2rem] bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-100 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors group"
                      >
                          <div className={`w-10 h-10 rounded-full ${feature.color} flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform`}>
                              <feature.icon className="w-5 h-5" />

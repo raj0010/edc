@@ -16,13 +16,13 @@ export const AuroraBackground = ({
   return (
     <div
       className={cn(
-        "relative flex flex-col w-full min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white transition-colors duration-300",
+        "relative flex flex-col w-full min-h-screen bg-neutral-50 dark:bg-[#0F0F0F] text-neutral-900 dark:text-white transition-colors duration-300",
         className
       )}
       {...props}
     >
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-neutral-50 dark:bg-black transition-colors duration-300"></div>
+        <div className="absolute inset-0 bg-neutral-50 dark:bg-[#0F0F0F] transition-colors duration-300"></div>
         
         {/* Optimized Animated Gradients */}
         {showRadialGradient && (

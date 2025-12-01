@@ -28,7 +28,7 @@ const getCategoryColor = (category: string) => {
 
 export const NewsFeed: React.FC<NewsFeedProps> = ({ news }) => {
   return (
-    <section className="py-24 bg-white dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
+    <section className="py-24 bg-white dark:bg-[#0F0F0F] border-t border-neutral-200 dark:border-neutral-800 transition-colors duration-300">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
             <div>
@@ -79,7 +79,7 @@ export const NewsFeed: React.FC<NewsFeedProps> = ({ news }) => {
                             </h3>
                         </div>
 
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-loose tracking-wide mb-6">
                             {item.summary}
                         </p>
 

@@ -57,7 +57,7 @@ export const JoinModal: React.FC<JoinModalProps> = ({ isOpen, onClose }) => {
             className="fixed inset-0 z-[70] flex items-center justify-center pointer-events-none p-4"
           >
             <div className="w-full max-w-md pointer-events-auto">
-               <div className="bg-neutral-950 border border-neutral-800 rounded-3xl shadow-2xl overflow-hidden relative ring-1 ring-white/10">
+               <div className="bg-[#0F0F0F] border border-neutral-800 rounded-3xl shadow-2xl overflow-hidden relative ring-1 ring-white/10">
               
                 {/* Close Button */}
                 <button

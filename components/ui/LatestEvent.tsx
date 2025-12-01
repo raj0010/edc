@@ -83,7 +83,7 @@ export const LatestEvent: React.FC<LatestEventProps> = ({ clubs, onRegister }) =
         {/* Stub (Right) */}
         <div className="w-full md:w-64 bg-neutral-100/50 dark:bg-black/20 p-8 relative z-20 flex flex-col justify-between items-center text-center">
              {/* Cutout circles for tear-off effect */}
-             <div className="absolute -top-3 left-1/2 md:top-1/2 md:-left-3 w-6 h-6 bg-[#fafafa] dark:bg-[#050505] rounded-full transform -translate-x-1/2 md:-translate-y-1/2"></div>
+             <div className="absolute -top-3 left-1/2 md:top-1/2 md:-left-3 w-6 h-6 bg-[#fafafa] dark:bg-[#0F0F0F] rounded-full transform -translate-x-1/2 md:-translate-y-1/2"></div>
              <div className="absolute -bottom-3 left-1/2 md:top-auto md:bottom-auto md:top-1/2 md:-right-3 w-0 h-0 md:w-6 md:h-6 bg-transparent rounded-full"></div> {/* Hidden right cutout for visual balance if needed, simplified */}
              
              <div>

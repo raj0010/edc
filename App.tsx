@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Footer } from './components/Footer';
 import { Home } from './components/Home';
@@ -12,10 +11,18 @@ import { Navbar } from './components/Navbar';
 import { getClubs, getFeatures } from './backend/cms';
 import { Club, FeatureItem, NewsItem } from './types';
 import { initialNews } from './backend/data/news';
+import { GridBackground } from './components/ui/GridBackground';
+
+// Import New Pages
+import { AboutPage } from './components/pages/AboutPage';
+import { EventsPage } from './components/pages/EventsPage';
+import { NewsPage } from './components/pages/NewsPage';
+import { ClubsPage } from './components/pages/ClubsPage';
+import { LegalPage } from './components/pages/LegalPage';
 
 // Golden Ratio Constants for Animation
 const TRANSITION_DURATION = 0.618; // seconds
-const GOLDEN_EASE: [number, number, number, number] = [0.236, 1, 0.382, 1]; // Custom bezier approximating golden spiral deceleration
+const GOLDEN_EASE: [number, number, number, number] = [0.236, 1, 0.382, 1]; 
 
 function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
@@ -30,7 +37,7 @@ function App() {
   // Auth State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Fetch Data (Simulating Headless CMS)
+  // Fetch Data 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,8 +50,8 @@ function App() {
       } catch (error) {
         console.error("Failed to load content:", error);
       } finally {
-        // Keep loading true for a bit longer to show off skeleton if needed, or just set false
-        setTimeout(() => setIsLoading(false), 1500); 
+        // Reduced from 1500ms to 800ms for faster perceived load
+        setTimeout(() => setIsLoading(false), 800); 
       }
     };
 
@@ -59,7 +66,6 @@ function App() {
 
   // --- Admin Actions ---
   const handleLogin = (password: string) => {
-    // Simple mock authentication
     if (password === 'nexus2024') {
         setIsAuthenticated(true);
         setCurrentPage('admin');
@@ -80,6 +86,7 @@ function App() {
   };
 
   const renderPage = () => {
+    // 1. Admin
     if (currentPage === 'admin') {
         if (!isAuthenticated) return <AdminLogin onLogin={handleLogin} />;
         return (
@@ -93,12 +100,30 @@ function App() {
         );
     }
 
-    if (currentPage === 'home') {
-      return <Home clubs={clubs} features={features} news={news} onNavigate={setCurrentPage} isLoading={isLoading} />;
+    // 2. Main Pages
+    switch(currentPage) {
+        case 'home':
+            return <Home clubs={clubs} features={features} news={news} onNavigate={setCurrentPage} isLoading={isLoading} />;
+        case 'about':
+            return <AboutPage />;
+        case 'clubs':
+            return <ClubsPage clubs={clubs} onNavigate={setCurrentPage} />;
+        case 'events':
+            return <EventsPage clubs={clubs} />;
+        case 'news':
+            return <NewsPage news={news} />;
+            
+        // Legal
+        case 'privacy':
+            return <LegalPage type="privacy" />;
+        case 'terms':
+            return <LegalPage type="terms" />;
+        case 'cookies':
+            return <LegalPage type="cookies" />;
     }
 
+    // 3. Dynamic Club Pages
     const activeClub = clubs.find(c => c.id === currentPage);
-    
     if (activeClub) {
       return (
         <ClubDashboard 
@@ -109,19 +134,18 @@ function App() {
       );
     }
 
+    // Default Fallback
     return <Home clubs={clubs} features={features} news={news} onNavigate={setCurrentPage} isLoading={isLoading} />;
   };
 
   return (
     <ThemeProvider>
-      <div className="flex-1 flex flex-col min-h-[100dvh] bg-[#050505] text-neutral-900 dark:text-white selection:bg-blue-500/30 selection:text-white dark:selection:bg-blue-500/30 dark:selection:text-white relative transition-colors duration-300 font-sans">
+      <div className="flex-1 flex flex-col min-h-[100dvh] bg-[#0F0F0F] text-neutral-900 dark:text-white relative transition-colors duration-300 font-sans">
         
         {currentPage !== 'admin' && (
              <>
-                {/* Cyber-Minimalist Background for public pages */}
-                <div className="fixed inset-0 z-0 pointer-events-none bg-neutral-50 dark:bg-[#030303]" />
+                <GridBackground />
                 <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
-                <div className="fixed inset-0 z-0 pointer-events-none bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_70%,transparent_100%)]" />
 
                 <Navbar 
                   currentPage={currentPage} 
@@ -150,7 +174,7 @@ function App() {
           </AnimatePresence>
         </main>
         
-        {currentPage !== 'admin' && <Footer />}
+        {currentPage !== 'admin' && <Footer onNavigate={setCurrentPage} />}
 
         <JoinModal isOpen={isJoinModalOpen} onClose={() => setIsJoinModalOpen(false)} />
       </div>

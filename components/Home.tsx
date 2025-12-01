@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Hero } from './Hero';
 import { ClubShowcase } from './ClubShowcase';
@@ -7,8 +6,10 @@ import { Club, FeatureItem, NewsItem } from '../types';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { LatestEvent } from './ui/LatestEvent';
-import { AboutUs } from './ui/AboutUs';
 import { NewsFeed } from './ui/NewsFeed';
+import { BentoGrid } from './ui/BentoGrid';
+import { Marquee } from './ui/Marquee';
+import { CallToAction } from './ui/CallToAction';
 
 interface HomeProps {
   clubs: Club[];
@@ -43,31 +44,47 @@ export const Home: React.FC<HomeProps> = ({ clubs, features, news, onNavigate, i
         <Hero />
       </RevealSection>
       
-      {/* Latest Event Alert Section */}
+      {/* 1. Kinetic Marquee to break the fold */}
+      <RevealSection delay={0.2}>
+        <Marquee items={["Innovation", "Leadership", "Disruption", "Incubation", "Scale", "Impact"]} />
+      </RevealSection>
+
+      {/* 2. Latest Event - Needs Data */}
       {!isLoading && (
-         <div className="py-8">
-            <LatestEvent clubs={clubs} />
-         </div>
+        <RevealSection delay={0.3}>
+           <div className="py-8">
+              <LatestEvent clubs={clubs} />
+           </div>
+        </RevealSection>
       )}
       
-      {/* Club Showcase */}
+      {/* 3. Main Club Showcase (Handles internal skeletons) */}
       <RevealSection delay={0.1}>
-        <div className="py-12 bg-neutral-50/50 dark:bg-[#080808]">
+        <div className="py-12 bg-neutral-50/50 dark:bg-[#0F0F0F]">
             <ClubShowcase clubs={clubs} onExplore={onNavigate} isLoading={isLoading} />
         </div>
       </RevealSection>
 
-      {!isLoading && (
-        <>
-          <Features features={features} />
-          
-          <div className="relative z-10">
-            <AboutUs />
-          </div>
+      {/* 4. Bento Grid - Static Content, Render Immediately */}
+      <div className="py-12">
+          <BentoGrid />
+      </div>
 
-          <NewsFeed news={news} />
-        </>
+      {/* 5. Features - Deep Dive - Needs Data */}
+      {!isLoading && (
+          <Features features={features} />
       )}
+
+      {/* 6. News Feed - Content - Needs Data */}
+      {!isLoading && (
+          <NewsFeed news={news} />
+      )}
+
+      {/* 7. Strong Final CTA - Static Content, Render Immediately */}
+      <CallToAction onJoin={() => { 
+          const btn = document.querySelector('[aria-label="Join Ecosystem"]') as HTMLElement;
+          if(btn) btn.click();
+      }} />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Club, NewsItem } from '../../types';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -60,7 +59,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-neutral-100 dark:bg-black text-neutral-900 dark:text-white flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-neutral-100 dark:bg-[#0F0F0F] text-neutral-900 dark:text-white flex flex-col md:flex-row font-sans transition-colors duration-300">
       
       {/* Sidebar */}
       <div className="w-full md:w-64 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 p-6 flex flex-col">
@@ -157,7 +156,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                         <div>
                                             <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block mb-1">Tagline</label>
                                             <input 
-                                                className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 text-sm"
+                                                className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 text-sm text-neutral-900 dark:text-white"
                                                 value={clubForm.tagline || ''} 
                                                 onChange={e => setClubForm({...clubForm, tagline: e.target.value})}
                                             />
@@ -165,7 +164,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                         <div>
                                             <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block mb-1">Description</label>
                                             <textarea 
-                                                className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 text-sm h-24"
+                                                className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 text-sm h-24 text-neutral-900 dark:text-white"
                                                 value={clubForm.description || ''} 
                                                 onChange={e => setClubForm({...clubForm, description: e.target.value})}
                                             />
@@ -186,7 +185,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                                 {club.name[0]}
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-lg">{club.name}</h3>
+                                                <h3 className="font-bold text-lg text-neutral-900 dark:text-white">{club.name}</h3>
                                                 <p className="text-sm text-neutral-500">{club.tagline}</p>
                                             </div>
                                         </div>
@@ -216,12 +215,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                              <form onSubmit={handleNewsSubmit} className="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 mb-6 space-y-4">
                                  <div>
                                      <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block mb-1">Title</label>
-                                     <input required value={newsForm.title} onChange={e => setNewsForm({...newsForm, title: e.target.value})} className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2" />
+                                     <input required value={newsForm.title} onChange={e => setNewsForm({...newsForm, title: e.target.value})} className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 text-neutral-900 dark:text-white" />
                                  </div>
                                  <div className="grid grid-cols-2 gap-4">
                                      <div>
                                         <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block mb-1">Category</label>
-                                        <select value={newsForm.category} onChange={e => setNewsForm({...newsForm, category: e.target.value as any})} className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2">
+                                        <select value={newsForm.category} onChange={e => setNewsForm({...newsForm, category: e.target.value as any})} className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 text-neutral-900 dark:text-white">
                                             <option value="Announcement">Announcement</option>
                                             <option value="Achievement">Achievement</option>
                                             <option value="Opportunity">Opportunity</option>
@@ -229,12 +228,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                      </div>
                                      <div>
                                         <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block mb-1">Author</label>
-                                        <input value={newsForm.author} onChange={e => setNewsForm({...newsForm, author: e.target.value})} className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2" />
+                                        <input value={newsForm.author} onChange={e => setNewsForm({...newsForm, author: e.target.value})} className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 text-neutral-900 dark:text-white" />
                                      </div>
                                  </div>
                                  <div>
                                      <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block mb-1">Summary</label>
-                                     <textarea required value={newsForm.summary} onChange={e => setNewsForm({...newsForm, summary: e.target.value})} className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 h-24" />
+                                     <textarea required value={newsForm.summary} onChange={e => setNewsForm({...newsForm, summary: e.target.value})} className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 h-24 text-neutral-900 dark:text-white" />
                                  </div>
                                  <button type="submit" className="w-full bg-neutral-900 dark:bg-white text-white dark:text-black py-3 rounded-lg font-bold uppercase tracking-widest text-xs">Publish</button>
                              </form>
@@ -245,10 +244,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                  <div key={item.id} className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 flex justify-between items-start">
                                      <div>
                                          <div className="flex items-center gap-2 mb-2">
-                                             <span className="px-2 py-1 bg-neutral-100 dark:bg-neutral-800 rounded-md text-[10px] font-bold uppercase tracking-wider">{item.category}</span>
+                                             <span className="px-2 py-1 bg-neutral-100 dark:bg-neutral-800 rounded-md text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">{item.category}</span>
                                              <span className="text-xs text-neutral-400">{item.date}</span>
                                          </div>
-                                         <h4 className="font-bold text-lg mb-1">{item.title}</h4>
+                                         <h4 className="font-bold text-lg mb-1 text-neutral-900 dark:text-white">{item.title}</h4>
                                          <p className="text-sm text-neutral-500 dark:text-neutral-400">{item.summary}</p>
                                      </div>
                                      <button className="text-neutral-400 hover:text-red-500 transition-colors">
@@ -281,6 +280,6 @@ const StatCard = ({ label, value, color }: { label: string, value: string | numb
     <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 flex flex-col items-start relative overflow-hidden">
         <div className={`absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-10 ${color}`}></div>
         <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">{label}</span>
-        <span className="text-4xl font-black font-display">{value}</span>
+        <span className="text-4xl font-black font-display text-neutral-900 dark:text-white">{value}</span>
     </div>
 );

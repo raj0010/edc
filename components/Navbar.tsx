@@ -24,7 +24,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin,
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-4 pointer-events-none"
       >
-        <div className="pointer-events-auto bg-white/80 dark:bg-[#050505]/80 backdrop-blur-md border border-neutral-200/50 dark:border-white/10 rounded-full px-2 py-2 flex items-center shadow-sm">
+        <div className="pointer-events-auto bg-white/80 dark:bg-[#0F0F0F]/80 backdrop-blur-md border border-neutral-200/50 dark:border-white/10 rounded-full px-2 py-2 flex items-center shadow-sm">
             {/* Logo */}
             <button 
               className="flex items-center gap-3 pl-3 pr-6 group" 
@@ -92,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin,
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[60] bg-white dark:bg-neutral-950 flex flex-col p-6"
+            className="fixed inset-0 z-[60] bg-white dark:bg-[#0F0F0F] flex flex-col p-6 transition-colors duration-300"
           >
              <div className="flex justify-between items-center mb-10">
                 <div className="flex items-center gap-3">

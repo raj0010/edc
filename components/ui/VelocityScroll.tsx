@@ -74,10 +74,10 @@ function ParallaxText({ children, baseVelocity = 100, className }: ParallaxProps
 
 export const VelocityScroll: React.FC<VelocityScrollProps> = ({ text, default_velocity = 5, className }) => {
   return (
-    <section className="relative w-full py-12 bg-neutral-100 dark:bg-black border-y border-neutral-200 dark:border-neutral-800 overflow-hidden flex flex-col gap-4 transition-colors duration-500">
+    <section className="relative w-full py-12 bg-neutral-100 dark:bg-[#0F0F0F] border-y border-neutral-200 dark:border-neutral-800 overflow-hidden flex flex-col gap-4 transition-colors duration-500">
       <ParallaxText baseVelocity={default_velocity} className={className}>{text}</ParallaxText>
       <ParallaxText baseVelocity={-default_velocity} className={className}>{text}</ParallaxText>
-      <div className="absolute inset-0 bg-gradient-to-r from-neutral-100 via-transparent to-neutral-100 dark:from-black dark:via-transparent dark:to-black pointer-events-none z-10 transition-colors duration-500"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-neutral-100 via-transparent to-neutral-100 dark:from-[#0F0F0F] dark:via-transparent dark:to-[#0F0F0F] pointer-events-none z-10 transition-colors duration-500"></div>
     </section>
   );
 };
