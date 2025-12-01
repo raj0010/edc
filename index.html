@@ -17,6 +17,8 @@
             animation: {
               blob: "blob 7s infinite",
               'spin-slow': 'spin 12s linear infinite',
+              aurora: "aurora 60s linear infinite",
+              shimmer: "shimmer 2s infinite",
             },
             keyframes: {
               blob: {
@@ -33,6 +35,19 @@
                   transform: "translate(0px, 0px) scale(1)",
                 },
               },
+              aurora: {
+                "0%": {
+                  backgroundPosition: "50% 50%, 50% 50%",
+                },
+                "100%": {
+                  backgroundPosition: "350% 50%, 350% 50%",
+                },
+              },
+              shimmer: {
+                "100%": {
+                  transform: "translateX(100%)",
+                },
+              },
             },
           }
         }
@@ -42,6 +57,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+      :root {
+        color-scheme: light dark;
+      }
       html {
         -webkit-text-size-adjust: 100%;
       }
@@ -50,22 +68,53 @@
         margin: 0;
         overflow-x: hidden;
         position: relative;
-        /* Ensure smooth touch scrolling */
         touch-action: manipulation;
+        background-color: #fafafa; /* neutral-50 */
+        color: #171717; /* neutral-900 */
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      html.dark body {
+        background-color: #000000;
+        color: #ffffff;
       }
       #root {
         min-height: 100vh;
         display: flex;
         flex-direction: column;
       }
-      /* Hide scrollbar for Chrome, Safari and Opera */
+      
+      /* --- Custom Scrollbar --- */
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d4d4d4; /* neutral-300 */
+        border-radius: 9999px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a3a3a3; /* neutral-400 */
+      }
+      
+      html.dark ::-webkit-scrollbar-thumb {
+        background: #404040; /* neutral-700 */
+      }
+      html.dark ::-webkit-scrollbar-thumb:hover {
+        background: #525252; /* neutral-600 */
+      }
+
+      /* Hide scrollbar util */
       .no-scrollbar::-webkit-scrollbar {
           display: none;
       }
-      /* Hide scrollbar for IE, Edge and Firefox */
       .no-scrollbar {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+          -ms-overflow-style: none;
+          scrollbar-width: none;
       }
     </style>
   <script type="importmap">

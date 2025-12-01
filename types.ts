@@ -1,4 +1,4 @@
-import { LucideIcon } from 'lucide-react';
+
 
 export interface ClubMember {
   name: string;
@@ -21,7 +21,9 @@ export interface Club {
   name: string;
   tagline: string;
   description: string;
-  icon: LucideIcon;
+  mission?: string;
+  vision?: string;
+  icon: string; // Changed from LucideIcon to string for JSON serialization
   color: string;
   accentColor: string; // For text/borders (e.g., 'text-pink-500')
   features: string[];
@@ -30,7 +32,29 @@ export interface Club {
   stats: { label: string; value: string }[];
 }
 
+export interface FeatureItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  icon: string;
+  color: string;
+  bgGradient: string;
+  borderHighlight: string;
+  visual: string;
+}
+
 export interface NavItem {
   label: string;
   href: string;
+}
+
+export interface NewsItem {
+  id: string;
+  title: string;
+  summary: string;
+  date: string;
+  category: 'Announcement' | 'Achievement' | 'Opportunity';
+  author: string;
+  link?: string;
 }

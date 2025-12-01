@@ -1,93 +1,85 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sparkles, ArrowRight } from 'lucide-react';
+import { Menu, X, ArrowRight, UserCircle } from 'lucide-react';
 import { ThemeToggle } from './ui/ThemeToggle';
-import { clubs } from '../data/clubs';
+import { Club } from '../types';
 import { cn } from '../lib/utils';
+import { EDCLogo } from './ui/EDCLogo';
 
 interface NavbarProps {
   currentPage: string;
   onNavigate: (page: string) => void;
   onJoin: () => void;
+  clubs: Club[];
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin, clubs }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <>
       <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-0 left-0 right-0 z-50 py-4 px-4 md:px-6 pointer-events-none flex justify-center"
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-4 pointer-events-none"
       >
-        <div className="pointer-events-auto flex items-center justify-between bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-full border border-neutral-200/50 dark:border-white/10 shadow-xl shadow-black/5 px-4 pl-5 py-2.5 w-full md:w-auto md:min-w-[700px] lg:min-w-[800px] transition-all duration-300">
+        <div className="pointer-events-auto bg-white/80 dark:bg-[#050505]/80 backdrop-blur-md border border-neutral-200/50 dark:border-white/10 rounded-full px-2 py-2 flex items-center shadow-sm">
             {/* Logo */}
-            <div 
-              className="flex items-center gap-3 font-bold text-xl tracking-tighter font-display cursor-pointer group" 
+            <button 
+              className="flex items-center gap-3 pl-3 pr-6 group" 
               onClick={() => onNavigate('home')}
             >
-              <div className="w-9 h-9 bg-neutral-900 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-neutral-900 shadow-lg group-hover:scale-105 transition-transform">
-                 <span className="font-display font-black text-lg">N</span>
+              <div className="relative w-8 h-8 group-hover:scale-105 transition-transform">
+                 <EDCLogo className="w-full h-full" />
               </div>
-              <span className="transition-colors duration-300 hidden sm:inline-block text-neutral-900 dark:text-white">EDC Nexus</span>
-            </div>
+              <span className="font-bold text-xs tracking-widest uppercase text-neutral-900 dark:text-white hidden sm:block">EDC</span>
+            </button>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-1">
-               <button
-                  onClick={() => onNavigate('home')}
-                  className={cn(
-                    "px-5 py-2 rounded-full text-sm font-medium transition-all duration-300",
-                    currentPage === 'home'
-                      ? "bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-white shadow-sm font-bold"
-                      : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/50 dark:hover:bg-white/5"
-                  )}
-                >
-                  Hub
-                </button>
-               {clubs.map(club => (
+            <div className="hidden md:flex items-center gap-1 bg-neutral-100/50 dark:bg-white/5 rounded-full p-1 border border-neutral-200/50 dark:border-white/5">
+                {clubs.map((club) => (
                   <button
                     key={club.id}
                     onClick={() => onNavigate(club.id)}
                     className={cn(
-                      "px-5 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                      "px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-300",
                       currentPage === club.id
-                        ? "bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-white shadow-sm font-bold"
-                        : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/50 dark:hover:bg-white/5"
+                        ? "bg-white dark:bg-neutral-800 text-black dark:text-white shadow-sm"
+                        : "text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white"
                     )}
                   >
                     {club.name.replace(' Club', '')}
                   </button>
-               ))}
+                ))}
             </div>
+
+            <div className="w-px h-6 bg-neutral-200 dark:bg-white/10 mx-4 hidden md:block"></div>
 
             {/* Actions */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="flex items-center gap-2 pl-2 md:pl-0">
                <ThemeToggle />
+               
+               <button 
+                 onClick={() => onNavigate('admin')}
+                 className="p-2 rounded-full text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                 aria-label="Admin Login"
+               >
+                 <UserCircle className="w-5 h-5" />
+               </button>
+
                <button 
                  onClick={onJoin}
-                 className="group relative px-5 py-2 bg-neutral-900 dark:bg-white text-white dark:text-black text-sm font-bold rounded-full overflow-hidden transition-all shadow-md hover:shadow-lg ml-1"
+                 className="hidden md:flex items-center gap-2 bg-neutral-900 dark:bg-white text-white dark:text-black px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
                >
-                 <span className="relative z-10 flex items-center gap-2">
-                    <span>Join</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                 </span>
-                 <div className="absolute inset-0 bg-gradient-to-r from-neutral-700 to-black dark:from-neutral-300 dark:to-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                 Join <ArrowRight className="w-3 h-3" />
                </button>
-            </div>
-
-            {/* Mobile Menu Toggle */}
-            <div className="md:hidden flex items-center gap-2">
-               <div className="scale-90">
-                   <ThemeToggle />
-               </div>
+               
                <button 
                   onClick={() => setIsMobileMenuOpen(true)} 
-                  className="p-2 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                  className="md:hidden p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                 >
-                  <Menu className="w-5 h-5" />
+                  <Menu className="w-5 h-5 text-neutral-900 dark:text-white" />
                </button>
             </div>
         </div>
@@ -100,85 +92,54 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onJoin 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[60] bg-white dark:bg-neutral-950 flex flex-col"
+            className="fixed inset-0 z-[60] bg-white dark:bg-neutral-950 flex flex-col p-6"
           >
-             {/* Header */}
-             <div className="p-6 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-900">
-                <div className="flex items-center gap-3 font-bold text-xl font-display text-neutral-900 dark:text-white">
-                   <div className="w-10 h-10 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-neutral-900">
-                      <span className="font-display font-black text-xl">N</span>
-                   </div>
-                   <span>EDC Nexus</span>
+             <div className="flex justify-between items-center mb-10">
+                <div className="flex items-center gap-3">
+                   <EDCLogo className="w-10 h-10" />
+                   <span className="font-display font-black text-2xl dark:text-white tracking-tighter">EDC</span>
                 </div>
-                <button 
-                   onClick={() => setIsMobileMenuOpen(false)} 
-                   className="p-3 rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
-                >
-                   <X className="w-6 h-6" />
+                <button onClick={() => setIsMobileMenuOpen(false)}>
+                   <X className="w-8 h-8 dark:text-white" />
                 </button>
              </div>
 
-             {/* Menu Items */}
-             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-2">
-                <div className="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-4">Navigation</div>
-                
-                <motion.button
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 }}
-                    onClick={() => {
-                      onNavigate('home');
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className={cn(
-                      "text-left text-4xl font-bold font-display py-3 border-b border-neutral-100 dark:border-neutral-900 transition-colors",
-                      currentPage === 'home' ? "text-neutral-900 dark:text-white" : "text-neutral-400 dark:text-neutral-600"
-                    )}
-                >
-                  Home Hub
-                </motion.button>
-
-                {clubs.map((club, i) => (
+             <div className="flex flex-col gap-6">
+                {clubs.map((club, idx) => (
                   <motion.button
                     key={club.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + i * 0.05 }}
+                    transition={{ delay: idx * 0.05 }}
                     onClick={() => {
                       onNavigate(club.id);
                       setIsMobileMenuOpen(false);
                     }}
-                    className={cn(
-                      "text-left text-4xl font-bold font-display py-3 border-b border-neutral-100 dark:border-neutral-900 transition-colors flex items-center justify-between group",
-                      currentPage === club.id ? "text-neutral-900 dark:text-white" : "text-neutral-400 dark:text-neutral-600"
-                    )}
+                    className="text-left text-3xl font-bold font-display uppercase tracking-tighter text-neutral-900 dark:text-white"
                   >
                     {club.name}
-                    <ArrowRight className="w-6 h-6 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </motion.button>
                 ))}
-                
-                <div className="mt-8">
-                    <div className="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-4">Preferences</div>
-                    <div className="flex items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-900 rounded-2xl">
-                        <span className="font-medium text-neutral-900 dark:text-white">Theme Mode</span>
-                        <ThemeToggle />
-                    </div>
-                </div>
              </div>
 
-             {/* Footer Action */}
-             <div className="p-6 border-t border-neutral-100 dark:border-neutral-900">
+             <div className="mt-auto space-y-4">
+                <button 
+                  onClick={() => {
+                    onNavigate('admin');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full py-4 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white font-bold text-sm uppercase tracking-widest rounded-full"
+                >
+                  Admin Portal
+                </button>
                 <button 
                   onClick={() => {
                     onJoin();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full py-5 bg-neutral-900 dark:bg-white text-white dark:text-black text-lg font-bold rounded-2xl flex items-center justify-center gap-3 shadow-xl"
+                  className="w-full py-4 bg-neutral-900 dark:bg-white text-white dark:text-black font-bold text-sm uppercase tracking-widest rounded-full"
                 >
-                  <Sparkles className="w-5 h-5" />
-                  Join the Ecosystem
+                  Join Ecosystem
                 </button>
              </div>
           </motion.div>

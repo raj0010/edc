@@ -1,243 +1,153 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Code2, Rocket, ArrowRight } from 'lucide-react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
+import { FeatureItem } from '../types';
+import { getIcon } from '../lib/iconMap';
 import { cn } from '../lib/utils';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
-const features = [
-  {
-    id: 'inspire',
-    title: 'Inspire',
-    subtitle: 'Ignite the Spark',
-    description: 'Through world-class speaker sessions, fire-side chats with unicorn founders, and immersive workshops, we plant the seeds of innovation.',
-    icon: Sparkles,
-    color: 'text-amber-500',
-    bgGradient: 'from-amber-500/20 to-orange-500/5',
-    borderHighlight: 'group-hover:border-amber-500/50',
-    visual: 'orb'
-  },
-  {
-    id: 'build',
-    title: 'Build',
-    subtitle: 'Forge the Future',
-    description: 'Access our incubation labs, mentorship network, and technical resources. We help you turn back-of-the-napkin sketches into MVP prototypes.',
-    icon: Code2,
-    color: 'text-cyan-500',
-    bgGradient: 'from-cyan-500/20 to-blue-500/5',
-    borderHighlight: 'group-hover:border-cyan-500/50',
-    visual: 'code'
-  },
-  {
-    id: 'launch',
-    title: 'Launch',
-    subtitle: 'Scale to Infinity',
-    description: 'Pitch to top-tier VCs, secure seed funding, and get your startup off the ground. We provide the launchpad for your journey to the stars.',
-    icon: Rocket,
-    color: 'text-violet-500',
-    bgGradient: 'from-violet-500/20 to-purple-500/5',
-    borderHighlight: 'group-hover:border-violet-500/50',
-    visual: 'chart'
-  }
-];
+interface FeaturesProps {
+  features: FeatureItem[];
+}
 
-export const Features: React.FC = () => {
-  const [activeFeature, setActiveFeature] = useState<string>('build');
+// Strictly using Golden Ratio (approx 62% for Visual, 38% for Text)
+const TEXT_WIDTH_PERCENT = 38;
+const VISUAL_WIDTH_PERCENT = 62;
 
+interface FeatureCardProps { 
+  feature: FeatureItem; 
+  i: number; 
+  total: number; 
+}
+
+const FeatureCard: React.FC<FeatureCardProps> = ({ feature, i, total }) => {
+  const Icon = getIcon(feature.icon);
+  
   return (
-    <section className="py-8 md:py-12 bg-transparent border-t border-neutral-200/50 dark:border-neutral-800/50 overflow-hidden transition-colors duration-300">
-      <div className="container mx-auto px-4 md:px-6">
-        
-        {/* Section Header */}
-        <div className="mb-6 md:mb-10 text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-neutral-900 dark:text-white font-display mb-3 tracking-tight">
-                The Journey
-            </h2>
-            <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 font-light">
-                We provide the structured pathway to take you from zero to one.
-            </p>
-        </div>
+     <div className="h-screen flex items-center justify-center p-6 md:p-12 sticky top-0">
+        <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-24 h-full">
+            
+            {/* Text Side - 38% */}
+            <div className={`w-full md:w-[${TEXT_WIDTH_PERCENT}%] flex flex-col justify-center`}>
+                <motion.div 
+                   initial={{ opacity: 0, x: -50 }}
+                   whileInView={{ opacity: 1, x: 0 }}
+                   transition={{ duration: 0.8, ease: "easeOut" }}
+                   className="flex items-center gap-4 mb-6"
+                >
+                    <span className="text-6xl md:text-8xl font-black font-display text-neutral-200 dark:text-neutral-800 select-none">
+                        0{i + 1}
+                    </span>
+                    <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center bg-neutral-100 dark:bg-neutral-800", feature.color)}>
+                        <Icon className="w-6 h-6" />
+                    </div>
+                </motion.div>
 
-        {/* Mobile Tab Navigation */}
-        <div className="lg:hidden flex p-1 bg-neutral-100/50 dark:bg-neutral-800/50 backdrop-blur-md rounded-xl mb-4 border border-neutral-200 dark:border-neutral-700 overflow-x-auto scrollbar-hide">
-           {features.map((f) => {
-             const isActive = activeFeature === f.id;
-             const Icon = f.icon;
-             return (
-               <button
-                 key={f.id}
-                 onClick={() => setActiveFeature(f.id)}
-                 className={cn(
-                   "flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap",
-                   isActive 
-                     ? "bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm ring-1 ring-black/5 dark:ring-white/10" 
-                     : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-200/50 dark:hover:bg-neutral-800"
-                 )}
-               >
-                 <Icon className={cn("w-3 h-3", isActive ? f.color : "opacity-50")} />
-                 {f.title}
-               </button>
-             );
-           })}
-        </div>
+                <motion.h3 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.1 }}
+                    className="text-3xl md:text-5xl font-black font-display text-neutral-900 dark:text-white mb-6 leading-tight"
+                >
+                    {feature.title}
+                    <span className="block text-xl md:text-2xl font-light text-neutral-500 mt-2">{feature.subtitle}</span>
+                </motion.h3>
 
-        {/* Interactive Accordion Container */}
-        <div className="flex flex-col lg:flex-row gap-4 h-auto lg:h-[500px] w-full">
-          {features.map((feature) => {
-            const isActive = activeFeature === feature.id;
-            const Icon = feature.icon;
-
-            return (
-              <motion.div
-                key={feature.id}
-                onHoverStart={() => setActiveFeature(feature.id)}
-                onClick={() => setActiveFeature(feature.id)}
-                layout
-                className={cn(
-                  "relative rounded-[2rem] overflow-hidden border cursor-pointer transition-all duration-500 ease-in-out group backdrop-blur-xl shadow-lg",
-                  "bg-white/60 dark:bg-neutral-900/60 border-white/50 dark:border-neutral-800/50",
-                  feature.borderHighlight,
-                  isActive 
-                    ? "lg:flex-[3] bg-white/80 dark:bg-neutral-900/80 flex" 
-                    : "lg:flex-1 hidden lg:flex"
-                )}
-              >
-                {/* Background Gradients */}
-                <div 
-                  className={cn(
-                    "absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-700",
-                    feature.bgGradient,
-                    isActive ? "opacity-100" : "group-hover:opacity-30"
-                  )} 
-                />
+                <motion.p 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed mb-8"
+                >
+                    {feature.description}
+                </motion.p>
                 
-                {/* Content Container */}
-                <div className="relative h-full flex flex-col p-6 md:p-8 z-10 w-full">
-                  
-                  {/* Header (Icon + Title) */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className={cn(
-                      "w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border transition-colors duration-300 shadow-sm",
-                      "bg-white dark:bg-white/5 border-neutral-200 dark:border-white/10",
-                      isActive ? feature.color : "text-neutral-400"
-                    )}>
-                      <Icon className="w-5 h-5 md:w-6 md:h-6" />
-                    </div>
-                    
-                    <div className="lg:hidden block">
-                       <h3 className="text-lg font-bold text-neutral-900 dark:text-white font-display tracking-tight">{feature.title}</h3>
-                    </div>
+                <motion.button 
+                    whileHover={{ x: 10 }}
+                    className="text-sm font-bold uppercase tracking-widest flex items-center gap-2 text-neutral-900 dark:text-white"
+                >
+                    Explore Program <ArrowRight className="w-4 h-4" />
+                </motion.button>
+            </div>
 
-                    <motion.div 
-                       className="hidden lg:block"
-                       animate={{ opacity: isActive ? 1 : 0, rotate: isActive ? 0 : -45 }}
-                    >
-                       <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-white/10 flex items-center justify-center">
-                          <ArrowRight className="w-3 h-3 text-neutral-900 dark:text-white" />
-                       </div>
-                    </motion.div>
-                  </div>
-
-                  {/* Main Content Body */}
-                  <div className="flex-1 flex flex-col justify-between">
-                     
-                     {/* Visual Area */}
-                     <div className="flex-1 flex items-center justify-center min-h-[200px] lg:min-h-0 py-2">
-                        <AnimatePresence mode="wait">
-                           {isActive ? (
-                             <motion.div
-                               key="active-visual"
-                               initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                               animate={{ opacity: 1, scale: 1, y: 0 }}
-                               exit={{ opacity: 0, scale: 0.9 }}
-                               transition={{ duration: 0.5 }}
-                               className="w-full h-full flex items-center justify-center"
-                             >
-                                {feature.visual === 'orb' && (
-                                  <div className="relative">
-                                     <div className="w-32 h-32 bg-amber-500 rounded-full blur-[80px] opacity-50 animate-pulse"></div>
-                                     <div className="absolute inset-0 bg-gradient-to-br from-amber-300 to-orange-600 rounded-full opacity-80 blur-xl animate-spin-slow"></div>
-                                  </div>
-                                )}
-
-                                {feature.visual === 'code' && (
-                                  <div className="w-full max-w-[280px] md:max-w-sm bg-neutral-900 rounded-xl border border-neutral-800 shadow-2xl overflow-hidden font-mono text-[10px]">
-                                     <div className="h-6 bg-neutral-800 flex items-center px-3 space-x-2 border-b border-neutral-700">
-                                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                                        <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                                     </div>
-                                     <div className="p-3 text-cyan-300 space-y-1 opacity-90">
-                                        <p><span className="text-purple-400">import</span> {'{ Future }'} <span className="text-purple-400">from</span> <span className="text-green-300">'@edc'</span>;</p>
-                                        <p>&nbsp;</p>
-                                        <p><span className="text-purple-400">const</span> <span className="text-yellow-300">build</span> = () ={'>'} {'{'}</p>
-                                        <p className="pl-4"><span className="text-purple-400">return</span> <span className="text-green-300">"Success"</span>;</p>
-                                        <p>{'}'}</p>
-                                     </div>
-                                  </div>
-                                )}
-
-                                {feature.visual === 'chart' && (
-                                  <div className="relative w-full max-w-[200px] h-48 flex items-end justify-between px-2 pb-2 border-b border-l border-neutral-300 dark:border-neutral-700/50">
-                                     {[30, 50, 45, 70, 90].map((h, i) => (
-                                        <motion.div
-                                          key={i}
-                                          initial={{ height: 0 }}
-                                          animate={{ height: `${h}%` }}
-                                          transition={{ delay: i * 0.1, duration: 0.8 }}
-                                          className="w-6 bg-gradient-to-t from-violet-600 to-indigo-400 rounded-t-sm"
-                                        />
-                                     ))}
-                                     <motion.div 
-                                        animate={{ x: [0, 100], y: [0, -100], opacity: [0, 1, 0] }}
-                                        transition={{ duration: 3, repeat: Infinity }}
-                                        className="absolute bottom-0 left-0 text-white pointer-events-none"
-                                     >
-                                        <Rocket className="w-6 h-6 text-indigo-400" />
-                                     </motion.div>
-                                  </div>
-                                )}
-                             </motion.div>
-                           ) : (
-                             <div className="hidden lg:flex flex-col items-center justify-center h-full opacity-20">
-                                <Icon className="w-20 h-20 text-neutral-400 dark:text-neutral-600" />
+            {/* Visual Side - 62% */}
+            <div className={`hidden md:flex md:w-[${VISUAL_WIDTH_PERCENT}%] h-[60vh] rounded-[2rem] overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 relative`}>
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:2rem_2rem]"></div>
+                
+                {/* Visual Content based on feature type */}
+                <div className="absolute inset-0 flex items-center justify-center p-12">
+                     {feature.visual === 'orb' && (
+                         <div className="relative w-64 h-64">
+                             <div className="absolute inset-0 bg-amber-500/20 blur-[60px] rounded-full animate-pulse"></div>
+                             <div className="relative z-10 w-full h-full border border-neutral-300 dark:border-neutral-700 rounded-full flex items-center justify-center">
+                                 <Sparkles className="w-16 h-16 text-amber-500" />
                              </div>
-                           )}
-                        </AnimatePresence>
-                     </div>
+                             {/* Orbiting text */}
+                             <motion.div 
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-0"
+                             >
+                                 <div className="absolute -top-3 left-1/2 w-6 h-6 bg-neutral-900 dark:bg-white rounded-full"></div>
+                             </motion.div>
+                         </div>
+                     )}
 
-                     {/* Text Content */}
-                     <div className="mt-6">
-                        <h3 className={cn(
-                          "font-display font-bold text-neutral-900 dark:text-white mb-1 transition-all duration-300",
-                          isActive ? "text-2xl md:text-4xl hidden lg:block" : "text-2xl lg:hidden"
-                        )}>
-                          {isActive ? feature.title : ''}
-                        </h3>
-                        <div className={cn(
-                          "overflow-hidden transition-all duration-500",
-                          isActive ? "max-h-48 opacity-100" : "max-h-0 opacity-0 lg:max-h-0"
-                        )}>
-                           <p className="text-sm md:text-lg font-medium text-neutral-800 dark:text-neutral-200 mb-1">{feature.subtitle}</p>
-                           <p className="text-xs md:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                             {feature.description}
-                           </p>
-                        </div>
+                     {feature.visual === 'code' && (
+                         <div className="w-full h-full bg-[#1e1e1e] rounded-xl p-6 shadow-2xl overflow-hidden font-mono text-xs">
+                             <div className="flex gap-2 mb-4">
+                                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                 <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                 <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                             </div>
+                             <div className="text-blue-400">import</div> <div className="text-white inline">Future</div> <div className="text-blue-400 inline">from</div> <div className="text-orange-300 inline">'@edc/core'</div>;
+                             <br/><br/>
+                             <div className="text-purple-400">class</div> <div className="text-yellow-300 inline">Innovation</div> <div className="text-white inline">{`{`}</div>
+                             <br/>
+                             &nbsp;&nbsp;<div className="text-blue-400 inline">constructor</div>() {`{`}
+                             <br/>
+                             &nbsp;&nbsp;&nbsp;&nbsp;<div className="text-white inline">this.ideas</div> = [];
+                             <br/>
+                             &nbsp;&nbsp;{`}`}
+                             <br/><br/>
+                             &nbsp;&nbsp;<div className="text-yellow-300 inline">launch</div>() {`{`}
+                             <br/>
+                             &nbsp;&nbsp;&nbsp;&nbsp;<div className="text-green-400 inline">// To the moon 🚀</div>
+                             <br/>
+                             &nbsp;&nbsp;&nbsp;&nbsp;<div className="text-white inline">return</div> <div className="text-orange-300 inline">"Unicorn"</div>;
+                             <br/>
+                             &nbsp;&nbsp;{`}`}
+                             <br/>
+                             {`}`}
+                         </div>
+                     )}
 
-                        {!isActive && (
-                           <div className="hidden lg:block absolute bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                              <span className="text-2xl font-bold text-neutral-400 dark:text-neutral-600 tracking-widest uppercase [writing-mode:vertical-rl] rotate-180">
-                                {feature.title}
-                              </span>
-                           </div>
-                        )}
-                     </div>
-                  </div>
-
+                     {feature.visual === 'chart' && (
+                         <div className="w-full flex items-end justify-between h-64 px-8 pb-8 gap-4">
+                             {[40, 65, 50, 80, 60, 95].map((h, idx) => (
+                                 <motion.div 
+                                    key={idx}
+                                    initial={{ height: 0 }}
+                                    whileInView={{ height: `${h}%` }}
+                                    transition={{ duration: 1, delay: idx * 0.1 }}
+                                    className="flex-1 bg-gradient-to-t from-violet-600 to-violet-400 rounded-t-lg opacity-80"
+                                 />
+                             ))}
+                         </div>
+                     )}
                 </div>
-              </motion.div>
-            );
-          })}
+            </div>
+
         </div>
-      </div>
-    </section>
+     </div>
+  );
+};
+
+export const Features: React.FC<FeaturesProps> = ({ features }) => {
+  return (
+    <div className="relative bg-neutral-50 dark:bg-[#050505] -mt-10 md:-mt-20 z-0">
+        {features.map((feature, i) => (
+            <FeatureCard key={feature.id} feature={feature} i={i} total={features.length} />
+        ))}
+    </div>
   );
 };

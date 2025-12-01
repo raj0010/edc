@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Club } from '../../types';
 import { cn } from '../../lib/utils';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card';
+import { getIcon } from '../../lib/iconMap';
 
 // --- ClubCard Component ---
 
@@ -13,7 +14,8 @@ interface ClubCardProps {
 }
 
 export const ClubCard = ({ club, onClick, className }: ClubCardProps) => {
-  const { icon: Icon, name, description, color, tagline } = club;
+  const { icon: iconName, name, description, color, tagline } = club;
+  const Icon = getIcon(iconName);
   
   return (
     <Card 
@@ -90,6 +92,43 @@ export const ClubCard = ({ club, onClick, className }: ClubCardProps) => {
         
         {/* Shine Effect on Hover */}
         <div className="absolute inset-0 z-20 bg-gradient-to-tr from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none mix-blend-soft-light"></div>
+    </Card>
+  );
+};
+
+export const ClubCardSkeleton = ({ className }: { className?: string }) => {
+  return (
+    <Card 
+      className={cn(
+        "relative overflow-hidden border-0 rounded-[1.5rem] bg-neutral-900 shadow-2xl h-full flex flex-col justify-between p-1",
+        className
+      )}
+    >
+      {/* Header */}
+      <CardHeader className="space-y-3 pt-6 px-5 relative z-10">
+        <div className="w-10 h-10 rounded-xl bg-neutral-800 animate-pulse" />
+        <div className="space-y-2 pt-1">
+          <div className="h-8 w-3/4 bg-neutral-800 rounded-lg animate-pulse" />
+          <div className="h-3 w-1/2 bg-neutral-800 rounded-md animate-pulse" />
+        </div>
+      </CardHeader>
+
+      {/* Content */}
+      <CardContent className="px-5 pb-2 relative z-10">
+         <div className="space-y-2">
+            <div className="h-2 w-full bg-neutral-800 rounded animate-pulse" />
+            <div className="h-2 w-5/6 bg-neutral-800 rounded animate-pulse" />
+            <div className="h-2 w-4/6 bg-neutral-800 rounded animate-pulse" />
+         </div>
+      </CardContent>
+
+      {/* Footer */}
+      <CardFooter className="pb-5 px-5 relative z-10">
+          <div className="h-8 w-8 rounded-full bg-neutral-800 animate-pulse ml-auto" />
+      </CardFooter>
+      
+      {/* Shimmer */}
+      <div className="absolute inset-0 z-20 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
     </Card>
   );
 };

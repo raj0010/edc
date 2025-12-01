@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Club } from '../../types';
 import { MoveRight } from 'lucide-react';
+import { getIcon } from '../../lib/iconMap';
 
 interface CardFanProps {
   clubs: Club[];
@@ -24,6 +25,7 @@ export const CardFan: React.FC<CardFanProps> = ({ clubs, onClubClick }) => {
         // Calculate rotation spread
         const rotation = (index - (clubs.length - 1) / 2) * 10;
         const xOffset = (index - (clubs.length - 1) / 2) * 40;
+        const Icon = getIcon(club.icon);
         
         return (
           <motion.div
@@ -59,7 +61,7 @@ export const CardFan: React.FC<CardFanProps> = ({ clubs, onClubClick }) => {
             <div className="h-1/2 bg-neutral-800 relative overflow-hidden">
                <div className={`absolute inset-0 opacity-20 bg-gradient-to-br ${club.color}`} />
                <div className="absolute inset-0 flex items-center justify-center">
-                  <club.icon className="w-16 h-16 text-white opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Icon className="w-16 h-16 text-white opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
                </div>
             </div>
             

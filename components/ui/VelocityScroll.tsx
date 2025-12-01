@@ -58,9 +58,9 @@ function ParallaxText({ children, baseVelocity = 100, className }: ParallaxProps
   });
 
   return (
-    <div className="parallax overflow-hidden m-0 whitespace-nowrap flex flex-nowrap leading-[0.8]">
+    <div className="parallax overflow-hidden m-0 whitespace-nowrap flex flex-nowrap leading-[0.85] py-2">
       <motion.div 
-        className={cn("scroller font-display font-black uppercase text-6xl md:text-8xl lg:text-9xl tracking-tighter flex whitespace-nowrap flex-nowrap text-transparent bg-clip-text bg-gradient-to-b from-neutral-500 to-neutral-800 select-none will-change-transform", className)} 
+        className={cn("scroller font-display font-black uppercase text-7xl md:text-8xl lg:text-9xl tracking-tighter flex whitespace-nowrap flex-nowrap select-none will-change-transform", className)} 
         style={{ x }}
       >
         <span className="block mr-12 md:mr-24">{children} </span>
@@ -74,10 +74,10 @@ function ParallaxText({ children, baseVelocity = 100, className }: ParallaxProps
 
 export const VelocityScroll: React.FC<VelocityScrollProps> = ({ text, default_velocity = 5, className }) => {
   return (
-    <section className="relative w-full py-4 bg-black border-y border-neutral-900 overflow-hidden flex flex-col gap-2">
+    <section className="relative w-full py-12 bg-neutral-100 dark:bg-black border-y border-neutral-200 dark:border-neutral-800 overflow-hidden flex flex-col gap-4 transition-colors duration-500">
       <ParallaxText baseVelocity={default_velocity} className={className}>{text}</ParallaxText>
       <ParallaxText baseVelocity={-default_velocity} className={className}>{text}</ParallaxText>
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black pointer-events-none z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-neutral-100 via-transparent to-neutral-100 dark:from-black dark:via-transparent dark:to-black pointer-events-none z-10 transition-colors duration-500"></div>
     </section>
   );
 };
