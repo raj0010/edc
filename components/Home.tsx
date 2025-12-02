@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { LatestEvent } from './ui/LatestEvent';
 import { NewsFeed } from './ui/NewsFeed';
-import { BentoGrid } from './ui/BentoGrid';
 import { Marquee } from './ui/Marquee';
 import { CallToAction } from './ui/CallToAction';
 
@@ -38,6 +37,9 @@ const RevealSection: React.FC<RevealSectionProps> = ({ children, className, dela
 );
 
 export const Home: React.FC<HomeProps> = ({ clubs, features, news, onNavigate, isLoading }) => {
+  // Determine featured content dynamically
+  const featuredClub = clubs.find(c => c.id === 'startup') || clubs[0];
+
   return (
     <div className="flex flex-col w-full overflow-hidden">
       <RevealSection>
@@ -53,7 +55,7 @@ export const Home: React.FC<HomeProps> = ({ clubs, features, news, onNavigate, i
       {!isLoading && (
         <RevealSection delay={0.3}>
            <div className="py-8">
-              <LatestEvent clubs={clubs} />
+              <LatestEvent club={featuredClub} />
            </div>
         </RevealSection>
       )}
@@ -65,22 +67,17 @@ export const Home: React.FC<HomeProps> = ({ clubs, features, news, onNavigate, i
         </div>
       </RevealSection>
 
-      {/* 4. Bento Grid - Static Content, Render Immediately */}
-      <div className="py-12">
-          <BentoGrid />
-      </div>
-
-      {/* 5. Features - Deep Dive - Needs Data */}
+      {/* 4. Features - Deep Dive - Needs Data */}
       {!isLoading && (
           <Features features={features} />
       )}
 
-      {/* 6. News Feed - Content - Needs Data */}
+      {/* 5. News Feed - Content - Needs Data */}
       {!isLoading && (
           <NewsFeed news={news} />
       )}
 
-      {/* 7. Strong Final CTA - Static Content, Render Immediately */}
+      {/* 6. Strong Final CTA - Static Content, Render Immediately */}
       <CallToAction onJoin={() => { 
           const btn = document.querySelector('[aria-label="Join Ecosystem"]') as HTMLElement;
           if(btn) btn.click();

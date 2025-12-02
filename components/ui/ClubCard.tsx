@@ -100,35 +100,40 @@ export const ClubCardSkeleton = ({ className }: { className?: string }) => {
   return (
     <Card 
       className={cn(
-        "relative overflow-hidden border-0 rounded-[1.5rem] bg-neutral-900 shadow-2xl h-full flex flex-col justify-between p-1",
+        "relative overflow-hidden border border-neutral-200 dark:border-white/10 rounded-[1.5rem] bg-neutral-100 dark:bg-neutral-900 shadow-xl h-full flex flex-col justify-between p-1",
         className
       )}
     >
+      {/* Background Texture */}
+      <div className="absolute inset-0 opacity-50 dark:opacity-20 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
+
       {/* Header */}
       <CardHeader className="space-y-3 pt-6 px-5 relative z-10">
-        <div className="w-10 h-10 rounded-xl bg-neutral-800 animate-pulse" />
-        <div className="space-y-2 pt-1">
-          <div className="h-8 w-3/4 bg-neutral-800 rounded-lg animate-pulse" />
-          <div className="h-3 w-1/2 bg-neutral-800 rounded-md animate-pulse" />
+        <div className="w-10 h-10 rounded-xl bg-neutral-200 dark:bg-neutral-800/50 animate-pulse border border-neutral-300 dark:border-neutral-700/50" />
+        <div className="space-y-2 pt-2">
+          <div className="h-6 w-3/4 bg-neutral-200 dark:bg-neutral-800/50 rounded-lg animate-pulse" />
+          <div className="h-3 w-1/3 bg-neutral-200 dark:bg-neutral-800/50 rounded-md animate-pulse" />
         </div>
       </CardHeader>
 
       {/* Content */}
       <CardContent className="px-5 pb-2 relative z-10">
-         <div className="space-y-2">
-            <div className="h-2 w-full bg-neutral-800 rounded animate-pulse" />
-            <div className="h-2 w-5/6 bg-neutral-800 rounded animate-pulse" />
-            <div className="h-2 w-4/6 bg-neutral-800 rounded animate-pulse" />
+         <div className="space-y-2.5">
+            <div className="h-2 w-full bg-neutral-200 dark:bg-neutral-800/50 rounded-full animate-pulse" />
+            <div className="h-2 w-5/6 bg-neutral-200 dark:bg-neutral-800/50 rounded-full animate-pulse" />
+            <div className="h-2 w-4/6 bg-neutral-200 dark:bg-neutral-800/50 rounded-full animate-pulse" />
          </div>
       </CardContent>
 
       {/* Footer */}
       <CardFooter className="pb-5 px-5 relative z-10">
-          <div className="h-8 w-8 rounded-full bg-neutral-800 animate-pulse ml-auto" />
+          <div className="flex items-center gap-4 w-full">
+               <div className="h-8 w-8 rounded-full bg-neutral-200 dark:bg-neutral-800/50 animate-pulse ml-auto" />
+          </div>
       </CardFooter>
       
       {/* Shimmer */}
-      <div className="absolute inset-0 z-20 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
+      <div className="absolute inset-0 z-20 bg-gradient-to-r from-transparent via-white/40 dark:via-white/5 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
     </Card>
   );
 };

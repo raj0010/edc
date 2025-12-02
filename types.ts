@@ -16,6 +16,12 @@ export interface ClubEvent {
   speakers?: { name: string; role: string }[];
 }
 
+export interface ClubResource {
+  title: string;
+  url: string;
+  type?: 'doc' | 'link' | 'video';
+}
+
 export interface Club {
   id: string;
   name: string;
@@ -30,6 +36,7 @@ export interface Club {
   leads: ClubMember[];
   nextEvent: ClubEvent;
   stats: { label: string; value: string }[];
+  resources?: ClubResource[];
 }
 
 export interface FeatureItem {

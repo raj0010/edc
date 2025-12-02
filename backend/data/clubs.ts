@@ -32,6 +32,11 @@ export const clubsData: Club[] = [
       { label: 'Campaigns', value: '12+' },
       { label: 'Members', value: '150+' },
       { label: 'Reach', value: '50k' }
+    ],
+    resources: [
+      { title: 'Brand Style Guide', url: '#', type: 'doc' },
+      { title: 'Social Media Calendar Template', url: '#', type: 'doc' },
+      { title: 'Case Study Archive', url: '#', type: 'link' }
     ]
   },
   {
@@ -65,6 +70,12 @@ export const clubsData: Club[] = [
       { label: 'Startups', value: '45' },
       { label: 'Funding', value: '$2M+' },
       { label: 'Mentors', value: '20' }
+    ],
+    resources: [
+      { title: 'Pitch Deck Template', url: '#', type: 'doc' },
+      { title: 'Investor Database', url: '#', type: 'link' },
+      { title: 'Startup Legal Checklist', url: '#', type: 'doc' },
+      { title: 'MVP Development Guide', url: '#', type: 'video' }
     ]
   },
   {
@@ -98,6 +109,11 @@ export const clubsData: Club[] = [
       { label: 'Projects', value: '30+' },
       { label: 'Placements', value: '85%' },
       { label: 'Alumni', value: '200+' }
+    ],
+    resources: [
+      { title: 'Case Interview Frameworks', url: '#', type: 'doc' },
+      { title: 'Consulting Resume Guide', url: '#', type: 'doc' },
+      { title: 'Market Sizing Cheat Sheet', url: '#', type: 'doc' }
     ]
   },
   {
@@ -131,6 +147,11 @@ export const clubsData: Club[] = [
       { label: 'AUM', value: '$50k' },
       { label: 'Returns', value: '18%' },
       { label: 'Traders', value: '120' }
+    ],
+    resources: [
+      { title: 'Financial Modeling 101', url: '#', type: 'video' },
+      { title: 'Trading Terminology Glossary', url: '#', type: 'doc' },
+      { title: 'Live Market Dashboard', url: '#', type: 'link' }
     ]
   }
 ];

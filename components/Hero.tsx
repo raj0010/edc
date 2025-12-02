@@ -5,13 +5,23 @@ import { TypingText } from './ui/TypingText';
 
 const GOLDEN_EASE: [number, number, number, number] = [0.236, 1, 0.382, 1];
 
-const TAGLINES = [
+interface HeroProps {
+    taglines?: string[];
+    campuses?: string[];
+}
+
+const DEFAULT_TAGLINES = [
   "The Launchpad for Limitless Ideas.",
   "Build What Others Imagine.",
   "Where Vision Meets Action."
 ];
 
-export const Hero: React.FC = () => {
+const DEFAULT_CAMPUSES = ['Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Hyderabad'];
+
+export const Hero: React.FC<HeroProps> = ({ 
+    taglines = DEFAULT_TAGLINES,
+    campuses = DEFAULT_CAMPUSES
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -76,7 +86,7 @@ export const Hero: React.FC = () => {
             <motion.div style={{ y, opacity }} className="relative z-10 text-center w-full max-w-6xl mx-auto px-4">
                 <h1 className="text-4xl md:text-7xl lg:text-8xl font-black tracking-tight text-neutral-900 dark:text-white font-display select-none leading-[1.1] md:leading-[1.1]">
                    <TypingText 
-                      text={TAGLINES}
+                      text={taglines}
                       typingSpeed={60}
                       deletingSpeed={30}
                       pauseDuration={2500}
@@ -122,7 +132,7 @@ export const Hero: React.FC = () => {
                 transition={{ delay: 1.2, duration: 1 }}
                 className="mt-12 pt-8 border-t border-neutral-200 dark:border-white/5 w-full flex flex-wrap justify-center gap-x-8 gap-y-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-600"
             >
-                {['Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Hyderabad'].map((city, i) => (
+                {campuses.map((city) => (
                     <div key={city} className="flex items-center gap-2">
                         <Globe2 className="w-3 h-3 opacity-50" />
                         <span>{city}</span>

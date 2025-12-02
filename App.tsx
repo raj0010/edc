@@ -8,10 +8,9 @@ import { AdminDashboard } from './backend/Admin/AdminDashboard';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider } from './components/ThemeProvider';
 import { Navbar } from './components/Navbar';
-import { getClubs, getFeatures } from './backend/cms';
 import { Club, FeatureItem, NewsItem } from './types';
-import { initialNews } from './backend/data/news';
 import { GridBackground } from './components/ui/GridBackground';
+import { client } from './services'; // Import the unified client
 
 // Import New Pages
 import { AboutPage } from './components/pages/AboutPage';
@@ -31,7 +30,7 @@ function App() {
   // Data State
   const [clubs, setClubs] = useState<Club[]>([]);
   const [features, setFeatures] = useState<FeatureItem[]>([]);
-  const [news, setNews] = useState<NewsItem[]>(initialNews);
+  const [news, setNews] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Auth State
@@ -41,17 +40,18 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [clubsData, featuresData] = await Promise.all([
-          getClubs(),
-          getFeatures()
+        const [clubsData, featuresData, newsData] = await Promise.all([
+          client.clubs.getAll(),
+          client.features.getAll(),
+          client.news.getAll()
         ]);
         setClubs(clubsData);
         setFeatures(featuresData);
+        setNews(newsData);
       } catch (error) {
         console.error("Failed to load content:", error);
       } finally {
-        // Reduced from 1500ms to 800ms for faster perceived load
-        setTimeout(() => setIsLoading(false), 800); 
+        setIsLoading(false); 
       }
     };
 
@@ -65,24 +65,43 @@ function App() {
   const openJoinModal = () => setIsJoinModalOpen(true);
 
   // --- Admin Actions ---
-  const handleLogin = (password: string) => {
-    if (password === 'nexus2024') {
-        setIsAuthenticated(true);
-        setCurrentPage('admin');
+  const handleLogin = async (password: string): Promise<boolean> => {
+    try {
+        const response = await client.auth.login(password);
+        if (response.success) {
+            setIsAuthenticated(true);
+            setCurrentPage('admin');
+            return true;
+        }
+        return false;
+    } catch (e) {
+        console.error("Login failed", e);
+        return false;
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+      await client.auth.logout();
       setIsAuthenticated(false);
       setCurrentPage('home');
   };
 
-  const updateClub = (clubId: string, data: Partial<Club>) => {
-      setClubs(prev => prev.map(c => c.id === clubId ? { ...c, ...data } : c));
+  const updateClub = async (clubId: string, data: Partial<Club>) => {
+      try {
+        const updatedClub = await client.clubs.update(clubId, data);
+        setClubs(prev => prev.map(c => c.id === clubId ? updatedClub : c));
+      } catch (e) {
+          console.error("Failed to update club", e);
+      }
   };
 
-  const addNews = (item: NewsItem) => {
-      setNews(prev => [item, ...prev]);
+  const addNews = async (item: NewsItem) => {
+      try {
+          const newItem = await client.news.create(item);
+          setNews(prev => [newItem, ...prev]);
+      } catch (e) {
+          console.error("Failed to add news", e);
+      }
   };
 
   const renderPage = () => {

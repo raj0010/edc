@@ -1,24 +1,31 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, ArrowRight, ShieldCheck } from 'lucide-react';
-import { EDCLogo } from '../../components/ui/EDCLogo';
+import { Lock, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
 
 interface AdminLoginProps {
-  onLogin: (password: string) => void;
+  onLogin: (password: string) => Promise<boolean>;
 }
 
 export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'nexus2024') {
-      onLogin(password);
-    } else {
+    setIsLoading(true);
+    setError(false);
+
+    try {
+      const success = await onLogin(password);
+      if (!success) {
+        throw new Error('Invalid credentials');
+      }
+    } catch (err) {
       setError(true);
       setTimeout(() => setError(false), 2000);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -51,6 +58,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
                             className={`w-full bg-neutral-100 dark:bg-neutral-950 border ${error ? 'border-red-500' : 'border-neutral-200 dark:border-neutral-800'} rounded-xl px-4 py-3 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all`}
                             placeholder="••••••••"
                             autoFocus
+                            disabled={isLoading}
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2">
                             <Lock className="w-4 h-4 text-neutral-400" />
@@ -63,9 +71,14 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
 
                 <button 
                     type="submit"
-                    className="w-full py-4 bg-neutral-900 dark:bg-white text-white dark:text-black font-bold uppercase tracking-widest rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 group"
+                    disabled={isLoading}
+                    className="w-full py-4 bg-neutral-900 dark:bg-white text-white dark:text-black font-bold uppercase tracking-widest rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 group disabled:opacity-50"
                 >
-                    Authenticate <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    {isLoading ? (
+                        <>Authenticating...</>
+                    ) : (
+                        <>Authenticate <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
+                    )}
                 </button>
             </form>
 

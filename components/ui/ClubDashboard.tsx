@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { Club } from '../../types';
-import { ArrowLeft, Bell, Users, ArrowUpRight, Calendar, MoreHorizontal, Mail, ExternalLink, ChevronDown, Clock, Plus, UserCircle2, Target, Lightbulb, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Bell, Users, ArrowUpRight, Calendar, MoreHorizontal, Mail, ExternalLink, ChevronDown, Clock, Plus, UserCircle2, Target, Lightbulb, ArrowRight, FileText, Video, Link } from 'lucide-react';
 import { getIcon } from '../../lib/iconMap';
 
 interface ClubDashboardProps {
@@ -12,6 +12,14 @@ interface ClubDashboardProps {
 
 const GOLDEN_EASE: [number, number, number, number] = [0.236, 1, 0.382, 1];
 const PHI_DELAY = 0.0618;
+
+const getResourceIcon = (type?: string) => {
+    switch(type) {
+        case 'video': return Video;
+        case 'link': return Link;
+        case 'doc': default: return FileText;
+    }
+}
 
 export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJoin }) => {
   const Icon = getIcon(club.icon);
@@ -325,24 +333,37 @@ export const ClubDashboard: React.FC<ClubDashboardProps> = ({ club, onBack, onJo
                              <p className="text-sm text-neutral-600 dark:text-neutral-400 transition-colors">Exclusive tools and guides for club members.</p>
                          </div>
 
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             {['Club Handbook 2024', 'Mentorship Portal', 'Project Archive', 'Learning Roadmap'].map((item, i) => (
-                                 <motion.a 
-                                    key={i} 
-                                    href="#" 
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                    whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
-                                    className="p-6 rounded-[1.5rem] bg-white/50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-neutral-300 dark:hover:border-white/20 transition-all cursor-pointer group/res flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-neutral-500"
-                                 >
-                                     <span className="text-base font-bold text-neutral-900 dark:text-white transition-colors">{item}</span>
-                                     <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-white/5 flex items-center justify-center group-hover/res:bg-neutral-900 dark:group-hover/res:bg-white transition-colors">
-                                        <ArrowUpRight className="w-4 h-4 text-neutral-500 dark:text-neutral-400 group-hover/res:text-white dark:group-hover/res:text-black" />
-                                     </div>
-                                 </motion.a>
-                             ))}
-                         </div>
+                         {club.resources && club.resources.length > 0 ? (
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                 {club.resources.map((res, i) => {
+                                     const ResIcon = getResourceIcon(res.type);
+                                     return (
+                                     <motion.a 
+                                        key={i} 
+                                        href={res.url} 
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.1 }}
+                                        whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
+                                        className="p-6 rounded-[1.5rem] bg-white/50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-neutral-300 dark:hover:border-white/20 transition-all cursor-pointer group/res flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                                     >
+                                         <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                                                <ResIcon className="w-4 h-4" />
+                                            </div>
+                                            <span className="text-base font-bold text-neutral-900 dark:text-white transition-colors">{res.title}</span>
+                                         </div>
+                                         <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-white/5 flex items-center justify-center group-hover/res:bg-neutral-900 dark:group-hover/res:bg-white transition-colors">
+                                            <ArrowUpRight className="w-4 h-4 text-neutral-500 dark:text-neutral-400 group-hover/res:text-white dark:group-hover/res:text-black" />
+                                         </div>
+                                     </motion.a>
+                                 )})}
+                             </div>
+                         ) : (
+                             <div className="p-8 text-center text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800/50 rounded-3xl border border-neutral-200 dark:border-neutral-800">
+                                 <p className="text-sm">No resources available at the moment.</p>
+                             </div>
+                         )}
                       </motion.div>
                     )}
                   </AnimatePresence>

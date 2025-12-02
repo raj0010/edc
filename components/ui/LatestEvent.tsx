@@ -4,20 +4,23 @@ import { Clock, MapPin, QrCode, Barcode } from 'lucide-react';
 import { Club } from '../../types';
 
 interface LatestEventProps {
-  clubs: Club[];
+  club?: Club;
   onRegister?: () => void;
 }
 
 const GOLDEN_EASE: [number, number, number, number] = [0.236, 1, 0.382, 1];
 
-export const LatestEvent: React.FC<LatestEventProps> = ({ clubs, onRegister }) => {
-  const featuredClub = clubs.find(c => c.id === 'startup') || clubs[0];
-  if (!featuredClub || !featuredClub.nextEvent) return null;
+export const LatestEvent: React.FC<LatestEventProps> = ({ club, onRegister }) => {
+  if (!club || !club.nextEvent) return null;
 
-  const event = featuredClub.nextEvent;
-  const [datePart, timePart] = event.date.split('•').map(s => s.trim());
-  const month = datePart.split(' ')[0];
-  const day = datePart.split(' ')[1];
+  const event = club.nextEvent;
+  // Fallback to simple splitting or default values if format varies
+  const parts = event.date.split('•');
+  const datePart = parts[0]?.trim() || event.date;
+  const timePart = parts[1]?.trim() || '';
+  
+  const month = datePart.split(' ')[0] || 'OCT';
+  const day = datePart.split(' ')[1] || '01';
 
   return (
     <section className="w-full max-w-5xl mx-auto px-4 py-20 relative z-20">
@@ -31,7 +34,7 @@ export const LatestEvent: React.FC<LatestEventProps> = ({ clubs, onRegister }) =
       >
         {/* Holographic Background Effect */}
         <div className="absolute inset-0 bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 z-0"></div>
-        <div className={`absolute inset-0 bg-gradient-to-r ${featuredClub.color} opacity-10 mix-blend-overlay group-hover:opacity-20 transition-opacity duration-700`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-r ${club.color} opacity-10 mix-blend-overlay group-hover:opacity-20 transition-opacity duration-700`}></div>
         
         {/* Shine */}
         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out z-10 pointer-events-none"></div>
@@ -41,8 +44,8 @@ export const LatestEvent: React.FC<LatestEventProps> = ({ clubs, onRegister }) =
             <div className="flex justify-between items-start mb-8">
                 <div className="flex flex-col">
                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 mb-2">Upcoming Event</span>
-                   <div className={`inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 ${featuredClub.accentColor} text-[10px] font-bold uppercase tracking-widest`}>
-                       {featuredClub.name}
+                   <div className={`inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 ${club.accentColor} text-[10px] font-bold uppercase tracking-widest`}>
+                       {club.name}
                    </div>
                 </div>
                 <div className="flex items-center gap-2">
