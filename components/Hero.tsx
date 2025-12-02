@@ -52,7 +52,7 @@ export const Hero: React.FC<HeroProps> = ({
     <section 
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-[90vh] w-full flex flex-col items-center justify-center pt-32 pb-12 overflow-hidden"
+      className="relative min-h-[90vh] w-full flex flex-col items-center justify-center pt-28 md:pt-32 pb-12 overflow-hidden"
     >
       {/* Dynamic Background - Hidden in Dark Mode via class logic or opacity */}
       <motion.div 
@@ -63,28 +63,28 @@ export const Hero: React.FC<HeroProps> = ({
         transition={{ type: "tween", ease: "linear", duration: 0.1 }}
       />
 
-      <div className="container mx-auto px-6 relative z-10 flex flex-col items-center">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-col items-center">
          
          {/* University Badge */}
          <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: GOLDEN_EASE }}
-            className="mb-12 flex items-center gap-3 px-5 py-2 rounded-full bg-white/80 dark:bg-white/5 border border-neutral-200 dark:border-white/10 backdrop-blur-md shadow-sm"
+            className="mb-8 md:mb-12 flex items-center gap-3 px-4 py-1.5 md:px-5 md:py-2 rounded-full bg-white/80 dark:bg-white/5 border border-neutral-200 dark:border-white/10 backdrop-blur-md shadow-sm"
          >
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
             </span>
-            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">
+            <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">
               University School of Management
             </span>
          </motion.div>
 
          {/* Typing Headline */}
-         <div className="min-h-[180px] md:min-h-[280px] flex items-center justify-center perspective-1000 w-full">
-            <motion.div style={{ y, opacity }} className="relative z-10 text-center w-full max-w-6xl mx-auto px-4">
-                <h1 className="text-4xl md:text-7xl lg:text-8xl font-black tracking-tight text-neutral-900 dark:text-white font-display select-none leading-[1.1] md:leading-[1.1]">
+         <div className="min-h-[140px] sm:min-h-[180px] md:min-h-[280px] flex items-center justify-center perspective-1000 w-full">
+            <motion.div style={{ y, opacity }} className="relative z-10 text-center w-full max-w-6xl mx-auto px-2 md:px-4">
+                <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-8xl font-black tracking-tight text-neutral-900 dark:text-white font-display select-none leading-[1.2] md:leading-[1.1]">
                    <TypingText 
                       text={taglines}
                       typingSpeed={60}
@@ -103,7 +103,7 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.6 }}
-              className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 font-light leading-relaxed mb-10"
+              className="text-sm md:text-lg text-neutral-600 dark:text-neutral-400 font-light leading-relaxed mb-8 md:mb-10 px-4"
             >
                The Entrepreneur Development Cell (EDC) is the student-led engine driving innovation across <span className="font-bold text-neutral-900 dark:text-white">5 Campuses</span>.
             </motion.p>
@@ -130,7 +130,7 @@ export const Hero: React.FC<HeroProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2, duration: 1 }}
-                className="mt-12 pt-8 border-t border-neutral-200 dark:border-white/5 w-full flex flex-wrap justify-center gap-x-8 gap-y-4 text-[10px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-600"
+                className="mt-12 pt-8 border-t border-neutral-200 dark:border-white/5 w-full flex flex-wrap justify-center gap-x-6 gap-y-4 md:gap-x-8 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-600 px-6"
             >
                 {campuses.map((city) => (
                     <div key={city} className="flex items-center gap-2">

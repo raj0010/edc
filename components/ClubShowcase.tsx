@@ -10,7 +10,6 @@ interface ClubShowcaseProps {
   isLoading?: boolean;
 }
 
-const GOLDEN_RATIO = 1.618;
 const GOLDEN_EASE: [number, number, number, number] = [0.236, 1, 0.382, 1];
 
 export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore, isLoading }) => {
@@ -52,7 +51,7 @@ export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore, is
       <div className="container mx-auto px-4 relative z-10 flex flex-col items-center">
         
         {/* Header */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
+        <div className="text-center mb-12 md:mb-16 max-w-3xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -76,7 +75,7 @@ export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore, is
         </div>
 
         {/* Responsive Fan Layout */}
-        <div className="relative h-[600px] md:h-[500px] w-full max-w-5xl mx-auto flex items-center md:items-end justify-center perspective-[1000px]">
+        <div className="relative h-[400px] md:h-[450px] w-full max-w-5xl mx-auto flex items-center md:items-end justify-center perspective-[1000px]">
            {itemsToRender.map((item, index) => {
               const total = itemsToRender.length;
               const offset = index - (total - 1) / 2; 
@@ -92,10 +91,10 @@ export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore, is
               const dtY = Math.abs(offset) * 15;
 
               // --- Mobile Configuration ---
-              const mbSpacing = 0; 
-              const mbRotate = offset * 8; 
-              // Increased vertical spacing for mobile fan to prevent overlap
-              const mbY = offset * 45;
+              // Horizontal fan (Side by side)
+              const mbSpacing = 32; // Tight overlap to fit screen
+              const mbRotate = offset * 5; // Standard fan rotation
+              const mbY = Math.abs(offset) * 10; // Gentle arch
 
               // Select Config
               const spacing = isMobile ? mbSpacing : dtSpacing;
@@ -103,7 +102,7 @@ export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore, is
               const baseY = isMobile ? mbY : dtY;
 
               let rotate = baseRotate;
-              let x = isMobile ? 0 : offset * spacing;
+              let x = offset * spacing;
               let y = baseY;
               let scale = 1;
               let zIndex = index;
@@ -112,16 +111,16 @@ export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore, is
 
               if (isActive && !isLoading) {
                   rotate = 0;
-                  scale = isMobile ? 1.1 : 1.2;
+                  scale = isMobile ? 1.05 : 1.2;
                   zIndex = 100; // Ensure active card is on top
                   // Lift active card significantly
-                  y = isMobile ? -100 : -100; 
+                  y = isMobile ? -40 : -100; 
                   if (isMobile) {
-                      x = 0; 
+                      x = 0; // Center on mobile when active
                   }
               } else if (isAnyActive && !isLoading) {
                   scale = 0.9;
-                  opacity = isMobile ? 0.5 : 0.6;
+                  opacity = isMobile ? 0.4 : 0.6;
                   filter = "blur(2px) grayscale(0.5)"; 
               }
 
@@ -129,7 +128,7 @@ export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore, is
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, y: 500, rotate: 0 }}
-                  whileInView={{ opacity: opacity, y: baseY, rotate: baseRotate, x: isMobile ? 0 : offset * spacing }}
+                  whileInView={{ opacity: opacity, y: baseY, rotate: baseRotate, x: offset * spacing }}
                   viewport={{ once: true }}
                   transition={{ 
                     type: "spring", 
@@ -150,10 +149,9 @@ export const ClubShowcase: React.FC<ClubShowcaseProps> = ({ clubs, onExplore, is
                   onHoverStart={() => !isMobile && !isLoading && setActiveIndex(index)}
                   onHoverEnd={() => !isMobile && !isLoading && setActiveIndex(null)}
                   onClick={() => !isLoading && handleCardClick(index, item.id)}
-                  className="absolute w-[240px] h-[340px] md:w-[260px] md:h-[380px] rounded-[1.5rem] shadow-2xl cursor-pointer touch-pan-y bg-neutral-900 border border-white/10 origin-bottom"
+                  className="absolute w-[200px] h-[280px] md:w-[220px] md:h-[320px] rounded-[1.25rem] shadow-2xl cursor-pointer touch-pan-y bg-neutral-900 border border-white/10 origin-bottom"
                   style={{ 
                     transformOrigin: "bottom center",
-                    marginTop: isMobile ? '0px' : '0px'
                   }}
                 >
                   {isLoading || item.isSkeleton ? (

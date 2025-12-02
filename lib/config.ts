@@ -5,7 +5,7 @@ export const CONFIG = {
   SOURCE: 'mock' as 'mock' | 'api', 
   
   // The URL of your separate backend (e.g., Node, Python, Go)
-  API_BASE_URL: 'https://api.edc-nexus.edu/v1',
+  API_BASE_URL: 'http://localhost:3001/v1',
   
   // Simulation delay for mock data
   MOCK_DELAY: 400,

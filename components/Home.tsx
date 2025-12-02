@@ -1,7 +1,6 @@
 import React from 'react';
 import { Hero } from './Hero';
 import { ClubShowcase } from './ClubShowcase';
-import { Features } from './Features';
 import { Club, FeatureItem, NewsItem } from '../types';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
@@ -67,17 +66,12 @@ export const Home: React.FC<HomeProps> = ({ clubs, features, news, onNavigate, i
         </div>
       </RevealSection>
 
-      {/* 4. Features - Deep Dive - Needs Data */}
-      {!isLoading && (
-          <Features features={features} />
-      )}
-
-      {/* 5. News Feed - Content - Needs Data */}
+      {/* 4. News Feed - Content - Needs Data */}
       {!isLoading && (
           <NewsFeed news={news} />
       )}
 
-      {/* 6. Strong Final CTA - Static Content, Render Immediately */}
+      {/* 5. Strong Final CTA - Static Content, Render Immediately */}
       <CallToAction onJoin={() => { 
           const btn = document.querySelector('[aria-label="Join Ecosystem"]') as HTMLElement;
           if(btn) btn.click();
